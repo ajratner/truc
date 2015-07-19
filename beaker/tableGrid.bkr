@@ -1,0 +1,225 @@
+{
+    "beaker": "2",
+    "evaluators": [
+        {
+            "name": "Html",
+            "plugin": "Html",
+            "view": {
+                "cm": {
+                    "mode": "htmlmixed"
+                }
+            }
+        },
+        {
+            "name": "Latex",
+            "plugin": "Latex",
+            "view": {
+                "cm": {
+                    "mode": "stex"
+                }
+            }
+        },
+        {
+            "name": "JavaScript",
+            "plugin": "JavaScript",
+            "jsSetting2": "",
+            "jsSetting1": "",
+            "view": {
+                "cm": {
+                    "mode": "javascript",
+                    "background": "#FFE0F0"
+                }
+            }
+        },
+        {
+            "name": "IPython",
+            "plugin": "IPython",
+            "setup": "%matplotlib inline\nimport numpy\nimport matplotlib\nfrom matplotlib import pylab, mlab, pyplot\nnp = numpy\nplt = pyplot\nfrom IPython.display import display\nfrom IPython.core.pylabtools import figsize, getfigs\nfrom pylab import *\nfrom numpy import *\n",
+            "view": {
+                "cm": {
+                    "mode": "python"
+                }
+            }
+        }
+    ],
+    "cells": [
+        {
+            "id": "sectionJPEJFu",
+            "type": "section",
+            "title": "TableGrid: basic table data format",
+            "level": 1,
+            "evaluatorReader": false,
+            "collapsed": false
+        },
+        {
+            "id": "markdown6dCatD",
+            "type": "markdown",
+            "body": [
+                "Playing around with basic data format (and with Beaker Notebook), having attributes:",
+                "* cells",
+                "  * x-start",
+                "  * x-end",
+                "  * y-start",
+                "  * y-end",
+                "  * content",
+                "* id"
+            ],
+            "evaluatorReader": false
+        },
+        {
+            "id": "codeYxIbf8",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "n = 5",
+                    "m = 5",
+                    "beaker.tableGrid = {\"id\":\"table1\", \"cells\":[range(n*i, n*(i+1)) for i in range(m)]}"
+                ]
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "pluginName": "IPython",
+                "shellId": "A628C35783F84F77B3033F04B7A3CBAD",
+                "elapsedTime": 306
+            },
+            "evaluatorReader": true,
+            "lineCount": 3
+        },
+        {
+            "id": "codeCuQdao",
+            "type": "code",
+            "evaluator": "JavaScript",
+            "input": {
+                "body": [
+                    "var makeTable = function(tableGrid) {",
+                    "  var html = \"<table id=\\\"\" + tableGrid.id + \"\\\">\";",
+                    "  for (var i=0; i < tableGrid.cells.length; i++) {",
+                    "    html += \"<tr>\";",
+                    "    var row = tableGrid.cells[i];",
+                    "    for (var j=0; j < row.length; j++) {",
+                    "      var cell = row[j];",
+                    "      html += \"<td>\" + cell + \"</td>\";",
+                    "    }",
+                    "    html += \"</tr>\";",
+                    "  }",
+                    "  return html + \"</table>\";",
+                    "}",
+                    "",
+                    "$(\"#test\").append(makeTable(beaker.tableGrid));"
+                ]
+            },
+            "output": {
+                "state": {},
+                "result": "ERROR: circular objects are not supported",
+                "selectedType": "Text",
+                "pluginName": "JavaScript",
+                "elapsedTime": 11
+            },
+            "evaluatorReader": true,
+            "lineCount": 15
+        },
+        {
+            "id": "code3rUibS",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": [
+                    "<div id=\"test\"></div>"
+                ]
+            },
+            "output": {
+                "state": {},
+                "result": {
+                    "type": "BeakerDisplay",
+                    "innertype": "Html",
+                    "object": "<script>\nvar beaker = bkHelper.getBeakerObject().beakerObj;\n</script>\n<div id=\"test\"></div>"
+                },
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 0
+            },
+            "evaluatorReader": true,
+            "lineCount": 1
+        }
+    ],
+    "namespace": {
+        "table": [
+            [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            [
+                5,
+                6,
+                7,
+                8,
+                9
+            ],
+            [
+                10,
+                11,
+                12,
+                13,
+                14
+            ],
+            [
+                15,
+                16,
+                17,
+                18,
+                19
+            ],
+            [
+                20,
+                21,
+                22,
+                23,
+                24
+            ]
+        ],
+        "tableGrid": {
+            "cells": [
+                [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                [
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                ],
+                [
+                    10,
+                    11,
+                    12,
+                    13,
+                    14
+                ],
+                [
+                    15,
+                    16,
+                    17,
+                    18,
+                    19
+                ],
+                [
+                    20,
+                    21,
+                    22,
+                    23,
+                    24
+                ]
+            ],
+            "id": "table1"
+        }
+    }
+}
