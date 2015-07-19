@@ -1,10 +1,7 @@
 ### XML Parser
 
-To grab tables from XML for testing
+To grab tables from XML for testing.  Outputs a list of JSON TableGrid objects.
 
-To install and compile, run:
+To install and compile: `./get_deps.sh && ant`
 
-    ./get_deps.sh
-    ant
-
-To run: `java -ea -jar parser.jar [XML_FILES_DIR] [OUTPUT_DIR]`
+To run: `./run.sh [XML_FILES_DIR] [OUTPUT_DIR]`
