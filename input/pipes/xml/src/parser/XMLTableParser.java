@@ -70,6 +70,7 @@ public class XMLTableParser {
     int xEnd, yEnd;
     TableGrid tableGrid = new TableGrid(tableId);
     String localName;
+    HashMap<String> rowSpanPushed = new HashSet<String>();
     try {
       loop: for (int e=parser.next(); e != XMLStreamConstants.END_DOCUMENT; e = parser.next()) {
         switch (e) {
@@ -90,11 +91,24 @@ public class XMLTableParser {
               ArrayList<String> attrs = new ArrayList<String>();
               if (localName.equals("th")) { attrs.add("th"); }
 
+              // Adjust for effect of rowspans above
+              while (rowSpanPushed.contains(x+","+y)) { x += 1; }
+
               // Handle colspan, rowspan
               HashMap<String, String> cellAttrs = getElementAttributesMap();
-              xEnd = cellAttrs.containsKey("colspan") ? x + Integer.parseInt(cellAttrs.get("colspan")) - 1 : x;
-              yEnd = cellAttrs.containsKey("rowspan") ? y + Integer.parseInt(cellAttrs.get("rowspan")) - 1 : y;
+              int colspan = Integer.parseInt(cellAttrs.getOrDefault("colspan", 1));
+              int rowspan = Integer.parseInt(cellAttrs.getOrDefault("rowspan", 1));
+              xEnd = x + colspan - 1;
+              yEnd = y + rowspan - 1;
 
+              // Store the effect of rowspanning cells for cells in other rows
+              for (int i=1; i < rowspan; i++) {
+                for (int j=0; j < colspan; j++) {
+                  rowSpanPushed.put((x+j) + "," + (y+i));
+                }
+              }
+
+              // Add cell to tablegrid
               tableGrid.addCell(getFlatElementText(localName), attrs, x, xEnd, y, yEnd);
               x = xEnd;
             } 
