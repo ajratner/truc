@@ -70,7 +70,7 @@ public class XMLTableParser {
     int xEnd, yEnd;
     TableGrid tableGrid = new TableGrid(tableId);
     String localName;
-    HashMap<String> rowSpanPushed = new HashSet<String>();
+    HashSet<String> rowSpanPushed = new HashSet<String>();
     try {
       loop: for (int e=parser.next(); e != XMLStreamConstants.END_DOCUMENT; e = parser.next()) {
         switch (e) {
@@ -82,7 +82,7 @@ public class XMLTableParser {
           case XMLStreamConstants.START_ELEMENT:
             localName = parser.getLocalName();
             if (localName.equals("tr")) {
-              x = 0;
+              x = -1;
               y += 1;
             } else if (localName.equals("td") || localName.equals("th")) {
               x += 1;
@@ -96,15 +96,15 @@ public class XMLTableParser {
 
               // Handle colspan, rowspan
               HashMap<String, String> cellAttrs = getElementAttributesMap();
-              int colspan = Integer.parseInt(cellAttrs.getOrDefault("colspan", 1));
-              int rowspan = Integer.parseInt(cellAttrs.getOrDefault("rowspan", 1));
+              int colspan = Integer.parseInt(cellAttrs.getOrDefault("colspan", "1"));
+              int rowspan = Integer.parseInt(cellAttrs.getOrDefault("rowspan", "1"));
               xEnd = x + colspan - 1;
               yEnd = y + rowspan - 1;
 
               // Store the effect of rowspanning cells for cells in other rows
               for (int i=1; i < rowspan; i++) {
                 for (int j=0; j < colspan; j++) {
-                  rowSpanPushed.put((x+j) + "," + (y+i));
+                  rowSpanPushed.add((x+j) + "," + (y+i));
                 }
               }
 
