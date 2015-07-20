@@ -9,6 +9,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -20,6 +21,15 @@ public class XMLTableParser {
   private XMLInputFactory factory;
   private XMLStreamReader parser;
   private String fileName;
+
+  private HashMap getElementAttributesMap() {
+    HashMap<String, String> attrs = new HashMap<String, String>(); 
+    for (int i=0; i < parser.getAttributeCount(); i++) {
+      attrs.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
+      //System.out.println(parser.getAttributeLocalName(i) + " : " + parser.getAttributeValue(i));
+    }
+    return attrs;
+  }
 
   /**
    * Extract a flat element.  See dd-genomics/parser for more complex version.
@@ -57,6 +67,7 @@ public class XMLTableParser {
   private TableGrid parseTable(String tableId) {
     int x = -1;
     int y = -1;
+    int xEnd, yEnd;
     TableGrid tableGrid = new TableGrid(tableId);
     String localName;
     try {
@@ -73,7 +84,18 @@ public class XMLTableParser {
               y += 1;
             } else if (localName.equals("td") || localName.equals("th")) {
               x += 1;
-              tableGrid.addCell(getFlatElementText(localName), x, y);
+
+              // Handle some common cell attributes
+              ArrayList<String> attrs = new ArrayList<String>();
+              if (localName.equals("th")) { attrs.add("th"); }
+
+              // Handle colspan, rowspan
+              HashMap<String, String> cellAttrs = getElementAttributesMap();
+              xEnd = cellAttrs.containsKey("colspan") ? x + Integer.parseInt(cellAttrs.get("colspan")) - 1 : x;
+              yEnd = cellAttrs.containsKey("rowspan") ? y + Integer.parseInt(cellAttrs.get("rowspan")) - 1 : y;
+
+              tableGrid.addCell(getFlatElementText(localName), attrs, x, xEnd, y, yEnd);
+              x = xEnd;
             } 
             break;
         }

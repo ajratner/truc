@@ -8,9 +8,11 @@ public class TableGrid {
   private String id;
   private ArrayList<String> cellContents;
   private ArrayList<int[]> cellCoordinates;
+  private ArrayList<ArrayList<String>> cellAttributes;
 
-  public void addCell(String content, int xs, int xe, int ys, int ye) {
+  public void addCell(String content, ArrayList<String> attrs, int xs, int xe, int ys, int ye) {
     cellContents.add(content);
+    cellAttributes.add(attrs);
     int[] coords = new int[4];
     coords[0] = xs;
     coords[1] = xe;
@@ -18,27 +20,14 @@ public class TableGrid {
     coords[3] = ye;
     cellCoordinates.add(coords);
   }
-  public void addCell(String content, int xs, int ys) {
-    addCell(content, xs, xs, ys, ys);
+  public void addCell(String content, ArrayList<String> attrs, int xs, int ys) {
+    addCell(content, attrs, xs, xs, ys, ys);
   }
 
   /**
-   * Check to see if table has been captured correctly.
+   * Check to see if table has been captured correctly.  Anything actually worth putting here?
    **/
   public boolean isCoherent() {
-    int d = cellCoordinates.size();
-    int[] rowMaxs = new int[d];
-    int[] colMaxs = new int[d];
-    for (int[] coords : cellCoordinates) {
-      if (rowMaxs[coords[3]] < coords[1]) { rowMaxs[coords[3]] = coords[1]; }
-      if (colMaxs[coords[1]] < coords[3]) { colMaxs[coords[1]] = coords[3]; }
-    }
-    int rowMaxFirst = rowMaxs[0];
-    int colMaxFirst = colMaxs[0];
-    for (int i=0; i < d; i++) {
-      if (rowMaxs[i] > 0 && rowMaxs[i] != rowMaxFirst) { return false; }
-      if (colMaxs[i] > 0 && colMaxs[i] != colMaxFirst) { return false; }
-    }
     return true;
   }
 
@@ -51,6 +40,11 @@ public class TableGrid {
 
       // Content
       cell.put("content", cellContents.get(i));
+
+      // Attributes
+      JSONArray attrs = new JSONArray();
+      for (String attr : cellAttributes.get(i)) { attrs.add(attr); }
+      cell.put("attributes", attrs);
 
       // Coordinates- compressed format
       int[] coords = cellCoordinates.get(i);
@@ -82,5 +76,6 @@ public class TableGrid {
     this.id = id;
     this.cellContents = new ArrayList<String>();
     this.cellCoordinates = new ArrayList<int[]>();
+    this.cellAttributes = new ArrayList<ArrayList<String>>();
   }
 }

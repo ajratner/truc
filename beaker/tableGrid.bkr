@@ -98,6 +98,34 @@
             "lineCount": 14
         },
         {
+            "id": "codedaD4FV",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "import sys",
+                    "sys.path.append('/Users/aratner/repos/truc/src')",
+                    "from table_struct import load_table_grids, TableGrid, TableCell",
+                    "",
+                    "# load tables from json",
+                    "TG_PATH = '/Users/aratner/repos/truc/input/pipes/xml/out.json'",
+                    "tables = load_table_grids(TG_PATH)",
+                    "",
+                    "#print tables[0].to_dict()",
+                    "beaker.tables = [table.to_dict() for table in tables]"
+                ]
+            },
+            "output": {
+                "state": {},
+                "selectedType": "Hidden",
+                "pluginName": "IPython",
+                "shellId": "7919CDF6602C490B8D50CCCA19EDDEDC",
+                "elapsedTime": 404
+            },
+            "evaluatorReader": true,
+            "lineCount": 10
+        },
+        {
             "id": "codeCuQdao",
             "type": "code",
             "evaluator": "JavaScript",
@@ -123,13 +151,14 @@
                     "      y = cell.y[0];",
                     "      html += \"</tr><tr>\";",
                     "    }",
-                    "    html += \"<td>\" + cell.content + \"</td>\";",
+                    "    var td = cell.attributes.indexOf(\"th\") >= 0 ? \"th\" : \"td\";",
+                    "    html += \"<\"+td+\">\" + cell.content + \"</\"+td+\">\";",
                     "  }",
                     "  return html + \"</tr></table>\";",
                     "}",
                     "",
-                    "// Send a table -> html",
-                    "$(\"#test\").html(makeTable(beaker.tables[2]));"
+                    "// Send a table -> htmol",
+                    "$(\"#test\").html(makeTable(beaker.tables[0]));"
                 ]
             },
             "output": {
@@ -137,38 +166,10 @@
                 "result": "ERROR: circular objects are not supported",
                 "selectedType": "Text",
                 "pluginName": "JavaScript",
-                "elapsedTime": 36
+                "elapsedTime": 21
             },
             "evaluatorReader": true,
-            "lineCount": 27
-        },
-        {
-            "id": "codedaD4FV",
-            "type": "code",
-            "evaluator": "IPython",
-            "input": {
-                "body": [
-                    "import sys",
-                    "sys.path.append('/Users/aratner/repos/truc/src')",
-                    "from table_struct import load_table_grids, TableGrid, TableCell",
-                    "",
-                    "# load tables from json",
-                    "TG_PATH = '/Users/aratner/repos/truc/input/pipes/xml/out.json'",
-                    "tables = load_table_grids(TG_PATH)",
-                    "",
-                    "#print tables[0].to_dict()",
-                    "beaker.tables = [table.to_dict() for table in tables]"
-                ]
-            },
-            "output": {
-                "state": {},
-                "selectedType": "Hidden",
-                "pluginName": "IPython",
-                "shellId": "7919CDF6602C490B8D50CCCA19EDDEDC",
-                "elapsedTime": 331
-            },
-            "evaluatorReader": true,
-            "lineCount": 10
+            "lineCount": 28
         }
     ],
     "namespace": {
@@ -2940,728 +2941,806 @@
                 "cells": [
                     {
                         "content": "Microdeletions",
-                        "x": [
+                        "attributes": [
+                            "th"
+                        ],
+                        "y": [
                             0,
                             0
                         ],
-                        "y": [
+                        "x": [
                             0,
                             0
                         ]
                     },
                     {
                         "content": "Genes N",
-                        "x": [
-                            1,
-                            1
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            1,
+                            1
                         ]
                     },
                     {
                         "content": "GGE N = 1,366",
-                        "x": [
-                            2,
-                            2
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            2,
+                            2
                         ]
                     },
                     {
                         "content": "CTR N = 5,234",
-                        "x": [
-                            3,
-                            3
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            3,
+                            3
                         ]
                     },
                     {
                         "content": "P-value^",
-                        "x": [
-                            4,
-                            4
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            4,
+                            4
                         ]
                     },
                     {
                         "content": "OR, 95%-CI",
-                        "x": [
-                            5,
-                            5
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            5,
+                            5
                         ]
                     },
                     {
                         "content": "Autosomal microdeletions",
-                        "x": [
-                            6,
-                            6
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            6,
+                            6
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            7,
-                            7
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            7,
+                            7
                         ]
                     },
                     {
                         "content": "100",
-                        "x": [
-                            8,
-                            8
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            8,
+                            8
                         ]
                     },
                     {
                         "content": "208",
-                        "x": [
-                            9,
-                            9
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            9,
+                            9
                         ]
                     },
                     {
                         "content": "1.77E-07",
-                        "x": [
-                            10,
-                            10
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            10,
+                            10
                         ]
                     },
                     {
                         "content": "1.91; 1.48–2.46",
-                        "x": [
-                            11,
-                            11
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            11,
+                            11
                         ]
                     },
                     {
                         "content": "RefSeq NM genes",
-                        "x": [
-                            12,
-                            12
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            12,
+                            12
                         ]
                     },
                     {
                         "content": "18,299",
-                        "x": [
-                            13,
-                            13
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            13,
+                            13
                         ]
                     },
                     {
                         "content": "85",
-                        "x": [
-                            14,
-                            14
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            14,
+                            14
                         ]
                     },
                     {
                         "content": "172",
-                        "x": [
-                            15,
-                            15
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            15,
+                            15
                         ]
                     },
                     {
                         "content": "5.86E-07",
-                        "x": [
-                            16,
-                            16
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            16,
+                            16
                         ]
                     },
                     {
                         "content": "1.95; 1.48–2.57",
-                        "x": [
-                            17,
-                            17
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            17,
+                            17
                         ]
                     },
                     {
                         "content": "Brain-expressed genes",
-                        "x": [
-                            18,
-                            18
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            18,
+                            18
                         ]
                     },
                     {
                         "content": "8,878",
-                        "x": [
-                            19,
-                            19
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            19,
+                            19
                         ]
                     },
                     {
                         "content": "70",
-                        "x": [
-                            20,
-                            20
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            20,
+                            20
                         ]
                     },
                     {
                         "content": "126",
-                        "x": [
-                            21,
-                            21
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            21,
+                            21
                         ]
                     },
                     {
                         "content": "1.38E-07",
-                        "x": [
-                            22,
-                            22
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            22,
+                            22
                         ]
                     },
                     {
                         "content": "2.19; 1.61–2.98",
-                        "x": [
-                            23,
-                            23
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            23,
+                            23
                         ]
                     },
                     {
                         "content": "Hotspot microdeletions",
-                        "x": [
-                            24,
-                            24
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            24,
+                            24
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            25,
-                            25
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            25,
+                            25
                         ]
                     },
                     {
                         "content": "38",
-                        "x": [
-                            26,
-                            26
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            26,
+                            26
                         ]
                     },
                     {
                         "content": "20",
-                        "x": [
-                            27,
-                            27
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            27,
+                            27
                         ]
                     },
                     {
                         "content": "2.61E-17",
-                        "x": [
-                            28,
-                            28
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            28,
+                            28
                         ]
                     },
                     {
                         "content": "7.46; 4.20–13.3",
-                        "x": [
-                            29,
-                            29
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            29,
+                            29
                         ]
                     },
                     {
                         "content": "Gene-set enrichment",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             30,
                             30
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             31,
                             31
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             32,
                             32
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             33,
                             33
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             34,
                             34
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            35,
-                            35
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            35,
+                            35
                         ]
                     },
                     {
                         "content": "Neurodevelopmental genes#",
-                        "x": [
-                            36,
-                            36
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            36,
+                            36
                         ]
                     },
                     {
                         "content": "1,547",
-                        "x": [
-                            37,
-                            37
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            37,
+                            37
                         ]
                     },
                     {
                         "content": "59",
-                        "x": [
-                            38,
-                            38
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            38,
+                            38
                         ]
                     },
                     {
                         "content": "51",
-                        "x": [
-                            39,
-                            39
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            39,
+                            39
                         ]
                     },
                     {
                         "content": "8.02E-18",
-                        "x": [
-                            40,
-                            40
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            40,
+                            40
                         ]
                     },
                     {
                         "content": "4.58; 3.09–6.82",
-                        "x": [
-                            41,
-                            41
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            41,
+                            41
                         ]
                     },
                     {
                         "content": "ASD-related genes*",
-                        "x": [
-                            42,
-                            42
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            42,
+                            42
                         ]
                     },
                     {
                         "content": "1,669",
-                        "x": [
-                            43,
-                            43
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            43,
+                            43
                         ]
                     },
                     {
                         "content": "45",
-                        "x": [
-                            44,
-                            44
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            44,
+                            44
                         ]
                     },
                     {
                         "content": "43",
-                        "x": [
-                            45,
-                            45
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            45,
+                            45
                         ]
                     },
                     {
                         "content": "1.29E-12",
-                        "x": [
-                            46,
-                            46
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            46,
+                            46
                         ]
                     },
                     {
                         "content": "4.11; 2.64–6.40",
-                        "x": [
-                            47,
-                            47
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            47,
+                            47
                         ]
                     },
                     {
                         "content": "Control gene-sets",
+                        "attributes": [],
+                        "y": [
+                            8,
+                            8
+                        ],
                         "x": [
                             48,
                             48
-                        ],
-                        "y": [
-                            8,
-                            8
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            8,
+                            8
+                        ],
                         "x": [
                             49,
                             49
-                        ],
-                        "y": [
-                            8,
-                            8
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            8,
+                            8
+                        ],
                         "x": [
                             50,
                             50
-                        ],
-                        "y": [
-                            8,
-                            8
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            8,
+                            8
+                        ],
                         "x": [
                             51,
                             51
-                        ],
-                        "y": [
-                            8,
-                            8
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            8,
+                            8
+                        ],
                         "x": [
                             52,
                             52
-                        ],
-                        "y": [
-                            8,
-                            8
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            53,
-                            53
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            53,
+                            53
                         ]
                     },
                     {
                         "content": "Randomly selected genes",
-                        "x": [
-                            54,
-                            54
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            54,
+                            54
                         ]
                     },
                     {
                         "content": "3,256",
-                        "x": [
-                            55,
-                            55
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            55,
+                            55
                         ]
                     },
                     {
                         "content": "12",
-                        "x": [
-                            56,
-                            56
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            56,
+                            56
                         ]
                     },
                     {
                         "content": "35",
-                        "x": [
-                            57,
-                            57
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            57,
+                            57
                         ]
                     },
                     {
                         "content": "0.412",
-                        "x": [
-                            58,
-                            58
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            58,
+                            58
                         ]
                     },
                     {
                         "content": "1.32; 0.65–2.64",
-                        "x": [
-                            59,
-                            59
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            59,
+                            59
                         ]
                     },
                     {
                         "content": "Not brain-expressed genes",
-                        "x": [
-                            60,
-                            60
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            60,
+                            60
                         ]
                     },
                     {
                         "content": "3,837",
-                        "x": [
-                            61,
-                            61
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            61,
+                            61
                         ]
                     },
                     {
                         "content": "13",
-                        "x": [
-                            62,
-                            62
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            62,
+                            62
                         ]
                     },
                     {
                         "content": "58",
-                        "x": [
-                            63,
-                            63
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            63,
+                            63
                         ]
                     },
                     {
                         "content": "0.618",
-                        "x": [
-                            64,
-                            64
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            64,
+                            64
                         ]
                     },
                     {
                         "content": "0.86; 0.45–1.62",
-                        "x": [
-                            65,
-                            65
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            65,
+                            65
                         ]
                     }
                 ],
@@ -3671,695 +3750,772 @@
                 "cells": [
                     {
                         "content": "Recurrent Microdeletion",
-                        "x": [
+                        "attributes": [
+                            "th"
+                        ],
+                        "y": [
                             0,
                             0
                         ],
-                        "y": [
+                        "x": [
                             0,
                             0
                         ]
                     },
                     {
                         "content": "hg19 position",
-                        "x": [
-                            1,
-                            1
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            1,
+                            1
                         ]
                     },
                     {
                         "content": "GGE N = 1,366",
-                        "x": [
-                            2,
-                            2
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            2,
+                            2
                         ]
                     },
                     {
                         "content": "CTR N = 5,234",
-                        "x": [
-                            3,
-                            3
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            3,
+                            3
                         ]
                     },
                     {
                         "content": "Candidate Gene",
-                        "x": [
-                            4,
-                            4
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            4,
+                            4
                         ]
                     },
                     {
                         "content": "P-value",
-                        "x": [
-                            5,
-                            5
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            5,
+                            5
                         ]
                     },
                     {
                         "content": "OR, 95%-CI",
-                        "x": [
-                            6,
-                            6
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            6,
+                            6
                         ]
                     },
                     {
                         "content": "1q21.1",
-                        "x": [
-                            7,
-                            7
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            7,
+                            7
                         ]
                     },
                     {
                         "content": "chr1: 146.5–147.5",
+                        "attributes": [],
+                        "y": [
+                            1,
+                            1
+                        ],
                         "x": [
                             8,
                             8
-                        ],
-                        "y": [
-                            1,
-                            1
                         ]
                     },
                     {
                         "content": "1",
+                        "attributes": [],
+                        "y": [
+                            1,
+                            1
+                        ],
                         "x": [
                             9,
                             9
-                        ],
-                        "y": [
-                            1,
-                            1
                         ]
                     },
                     {
                         "content": "1",
-                        "x": [
-                            10,
-                            10
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            10,
+                            10
                         ]
                     },
                     {
                         "content": "GJA8",
-                        "x": [
-                            11,
-                            11
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            11,
+                            11
                         ]
                     },
                     {
                         "content": "0.37#",
-                        "x": [
-                            12,
-                            12
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            12,
+                            12
                         ]
                     },
                     {
                         "content": "3.8; 0.05–300",
-                        "x": [
-                            13,
-                            13
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            13,
+                            13
                         ]
                     },
                     {
                         "content": "15q11.2",
-                        "x": [
-                            14,
-                            14
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            14,
+                            14
                         ]
                     },
                     {
                         "content": "chr15: 22.8–23.1",
-                        "x": [
-                            15,
-                            15
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            15,
+                            15
                         ]
                     },
                     {
                         "content": "13",
-                        "x": [
-                            16,
-                            16
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            16,
+                            16
                         ]
                     },
                     {
                         "content": "14",
-                        "x": [
-                            17,
-                            17
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            17,
+                            17
                         ]
                     },
                     {
                         "content": "CYFIP1",
-                        "x": [
-                            18,
-                            18
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            18,
+                            18
                         ]
                     },
                     {
                         "content": "4.18E-04*",
-                        "x": [
-                            19,
-                            19
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            19,
+                            19
                         ]
                     },
                     {
                         "content": "3.5; 1.6–8.1",
-                        "x": [
-                            20,
-                            20
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            20,
+                            20
                         ]
                     },
                     {
                         "content": "15q13.3",
-                        "x": [
-                            21,
-                            21
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            21,
+                            21
                         ]
                     },
                     {
                         "content": "chr15: 31.3–32.5",
-                        "x": [
-                            22,
-                            22
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            22,
+                            22
                         ]
                     },
                     {
                         "content": "11",
-                        "x": [
-                            23,
-                            23
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            23,
+                            23
                         ]
                     },
                     {
                         "content": "0",
-                        "x": [
-                            24,
-                            24
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            24,
+                            24
                         ]
                     },
                     {
                         "content": "CHRNA7",
-                        "x": [
-                            25,
-                            25
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            25,
+                            25
                         ]
                     },
                     {
                         "content": "2.89E-08#",
-                        "x": [
-                            26,
-                            26
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            26,
+                            26
                         ]
                     },
                     {
                         "content": "Inf; 9.7-Inf",
-                        "x": [
-                            27,
-                            27
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            27,
+                            27
                         ]
                     },
                     {
                         "content": "16p13.11",
-                        "x": [
-                            28,
-                            28
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            28,
+                            28
                         ]
                     },
                     {
                         "content": "chr16: 15.0–16.3",
-                        "x": [
-                            29,
-                            29
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            29,
+                            29
                         ]
                     },
                     {
                         "content": "6",
-                        "x": [
-                            30,
-                            30
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            30,
+                            30
                         ]
                     },
                     {
                         "content": "2",
-                        "x": [
-                            31,
-                            31
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            31,
+                            31
                         ]
                     },
                     {
                         "content": "NDE1",
-                        "x": [
-                            32,
-                            32
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            32,
+                            32
                         ]
                     },
                     {
                         "content": "1.48E-03#",
-                        "x": [
-                            33,
-                            33
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            33,
+                            33
                         ]
                     },
                     {
                         "content": "11.5; 2.1–117",
-                        "x": [
-                            34,
-                            34
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            34,
+                            34
                         ]
                     },
                     {
                         "content": "16p12",
-                        "x": [
-                            35,
-                            35
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            35,
+                            35
                         ]
                     },
                     {
                         "content": "chr16:21.9–22.5",
-                        "x": [
-                            36,
-                            36
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            36,
+                            36
                         ]
                     },
                     {
                         "content": "3",
-                        "x": [
-                            37,
-                            37
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            37,
+                            37
                         ]
                     },
                     {
                         "content": "2",
-                        "x": [
-                            38,
-                            38
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            38,
+                            38
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            39,
-                            39
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            39,
+                            39
                         ]
                     },
                     {
                         "content": "0.06#",
-                        "x": [
-                            40,
-                            40
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            40,
+                            40
                         ]
                     },
                     {
                         "content": "5.8; 0.7–69",
-                        "x": [
-                            41,
-                            41
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            41,
+                            41
                         ]
                     },
                     {
                         "content": "16p11.2",
-                        "x": [
-                            42,
-                            42
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            42,
+                            42
                         ]
                     },
                     {
                         "content": "chr16: 29.6–30.2",
+                        "attributes": [],
+                        "y": [
+                            6,
+                            6
+                        ],
                         "x": [
                             43,
                             43
-                        ],
-                        "y": [
-                            6,
-                            6
                         ]
                     },
                     {
                         "content": "1",
+                        "attributes": [],
+                        "y": [
+                            6,
+                            6
+                        ],
                         "x": [
                             44,
                             44
-                        ],
-                        "y": [
-                            6,
-                            6
                         ]
                     },
                     {
                         "content": "1",
-                        "x": [
-                            45,
-                            45
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            45,
+                            45
                         ]
                     },
                     {
                         "content": "PRRT2",
-                        "x": [
-                            46,
-                            46
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            46,
+                            46
                         ]
                     },
                     {
                         "content": "0.37#",
-                        "x": [
-                            47,
-                            47
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            47,
+                            47
                         ]
                     },
                     {
                         "content": "3.8; 0.05–300",
-                        "x": [
-                            48,
-                            48
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            48,
+                            48
                         ]
                     },
                     {
                         "content": "22q11.2",
-                        "x": [
-                            49,
-                            49
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            49,
+                            49
                         ]
                     },
                     {
                         "content": "chr22: 18.8–21.6",
-                        "x": [
-                            50,
-                            50
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            50,
+                            50
                         ]
                     },
                     {
                         "content": "3",
-                        "x": [
-                            51,
-                            51
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            51,
+                            51
                         ]
                     },
                     {
                         "content": "0",
-                        "x": [
-                            52,
-                            52
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            52,
+                            52
                         ]
                     },
                     {
                         "content": "SNAP29",
-                        "x": [
-                            53,
-                            53
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            53,
+                            53
                         ]
                     },
                     {
                         "content": "8.85E-03#",
-                        "x": [
-                            54,
-                            54
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            54,
+                            54
                         ]
                     },
                     {
                         "content": "Inf; 1.6-Inf",
-                        "x": [
-                            55,
-                            55
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            55,
+                            55
                         ]
                     },
                     {
                         "content": "Total",
-                        "x": [
-                            56,
-                            56
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            56,
+                            56
                         ]
                     },
                     {
                         "content": " ",
-                        "x": [
-                            57,
-                            57
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            57,
+                            57
                         ]
                     },
                     {
                         "content": "38",
-                        "x": [
-                            58,
-                            58
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            58,
+                            58
                         ]
                     },
                     {
                         "content": "20",
-                        "x": [
-                            59,
-                            59
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            59,
+                            59
                         ]
                     },
                     {
                         "content": " ",
-                        "x": [
-                            60,
-                            60
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            60,
+                            60
                         ]
                     },
                     {
                         "content": "2.61E-17*",
-                        "x": [
-                            61,
-                            61
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            61,
+                            61
                         ]
                     },
                     {
                         "content": "7.5; 4.20–13.3",
-                        "x": [
-                            62,
-                            62
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            62,
+                            62
                         ]
                     }
                 ],
@@ -4369,2466 +4525,2706 @@
                 "cells": [
                     {
                         "content": "Sample-ID",
-                        "x": [
+                        "attributes": [
+                            "th"
+                        ],
+                        "y": [
                             0,
                             0
                         ],
-                        "y": [
+                        "x": [
                             0,
                             0
                         ]
                     },
                     {
                         "content": "Syndrome",
-                        "x": [
-                            1,
-                            1
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            1,
+                            1
                         ]
                     },
                     {
                         "content": "Chr",
-                        "x": [
-                            2,
-                            2
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            2,
+                            2
                         ]
                     },
                     {
                         "content": "Start",
-                        "x": [
-                            3,
-                            3
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            3,
+                            3
                         ]
                     },
                     {
                         "content": "End",
-                        "x": [
-                            4,
-                            4
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            4,
+                            4
                         ]
                     },
                     {
                         "content": "Candidate gene",
-                        "x": [
-                            5,
-                            5
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            5,
+                            5
                         ]
                     },
                     {
                         "content": "Disease/Trait",
-                        "x": [
-                            6,
-                            6
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            6,
+                            6
                         ]
                     },
                     {
                         "content": "References",
-                        "x": [
-                            7,
-                            7
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            7,
+                            7
                         ]
                     },
                     {
                         "content": "EC-CAE428",
-                        "x": [
-                            8,
-                            8
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            8,
+                            8
                         ]
                     },
                     {
                         "content": "6/CAE,gsw",
-                        "x": [
-                            9,
-                            9
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            9,
+                            9
                         ]
                     },
                     {
                         "content": "1",
-                        "x": [
-                            10,
-                            10
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            10,
+                            10
                         ]
                     },
                     {
                         "content": "97005643",
-                        "x": [
-                            11,
-                            11
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            11,
+                            11
                         ]
                     },
                     {
                         "content": "97712686",
-                        "x": [
-                            12,
-                            12
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            12,
+                            12
                         ]
                     },
                     {
                         "content": "DPYD",
-                        "x": [
-                            13,
-                            13
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            13,
+                            13
                         ]
                     },
                     {
                         "content": "SCZ,AUT",
-                        "x": [
-                            14,
-                            14
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            14,
+                            14
                         ]
                     },
                     {
                         "content": "[32–34]",
-                        "x": [
-                            15,
-                            15
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            15,
+                            15
                         ]
                     },
                     {
                         "content": "EC-EGTCS014",
-                        "x": [
-                            16,
-                            16
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            16,
+                            16
                         ]
                     },
                     {
                         "content": "14/EGTCS,gsw",
-                        "x": [
-                            17,
-                            17
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            17,
+                            17
                         ]
                     },
                     {
                         "content": "1",
-                        "x": [
-                            18,
-                            18
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            18,
+                            18
                         ]
                     },
                     {
                         "content": "110606081",
-                        "x": [
-                            19,
-                            19
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            19,
+                            19
                         ]
                     },
                     {
                         "content": "111393713",
-                        "x": [
-                            20,
-                            20
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            20,
+                            20
                         ]
                     },
                     {
                         "content": "KCNA2,ALX3",
-                        "x": [
-                            21,
-                            21
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            21,
+                            21
                         ]
                     },
                     {
                         "content": "EPI,ID",
-                        "x": [
-                            22,
-                            22
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            22,
+                            22
                         ]
                     },
                     {
                         "content": "[35–39]",
-                        "x": [
-                            23,
-                            23
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            23,
+                            23
                         ]
                     },
                     {
                         "content": "EC-CAE333#",
-                        "x": [
-                            24,
-                            24
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            24,
+                            24
                         ]
                     },
                     {
                         "content": "5/CAE,gsw",
-                        "x": [
-                            25,
-                            25
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            25,
+                            25
                         ]
                     },
                     {
                         "content": "2",
-                        "x": [
-                            26,
-                            26
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            26,
+                            26
                         ]
                     },
                     {
                         "content": "50979977",
-                        "x": [
-                            27,
-                            27
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            27,
+                            27
                         ]
                     },
                     {
                         "content": "51453231",
-                        "x": [
-                            28,
-                            28
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            28,
+                            28
                         ]
                     },
                     {
                         "content": "NRXN1",
-                        "x": [
-                            29,
-                            29
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            29,
+                            29
                         ]
                     },
                     {
                         "content": "GGE",
-                        "x": [
-                            30,
-                            30
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            30,
+                            30
                         ]
                     },
                     {
                         "content": "[26,40,41]",
-                        "x": [
-                            31,
-                            31
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            31,
+                            31
                         ]
                     },
                     {
                         "content": "EC-JAE085#",
-                        "x": [
-                            32,
-                            32
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            32,
+                            32
                         ]
                     },
                     {
                         "content": "12/JAE,gsw",
-                        "x": [
-                            33,
-                            33
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            33,
+                            33
                         ]
                     },
                     {
                         "content": "2",
-                        "x": [
-                            34,
-                            34
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            34,
+                            34
                         ]
                     },
                     {
                         "content": "51080429",
-                        "x": [
-                            35,
-                            35
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            35,
+                            35
                         ]
                     },
                     {
                         "content": "51682854",
-                        "x": [
-                            36,
-                            36
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            36,
+                            36
                         ]
                     },
                     {
                         "content": "NRXN1",
-                        "x": [
-                            37,
-                            37
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            37,
+                            37
                         ]
                     },
                     {
                         "content": "GGE",
-                        "x": [
-                            38,
-                            38
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            38,
+                            38
                         ]
                     },
                     {
                         "content": "[26,40,41]",
-                        "x": [
-                            39,
-                            39
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            39,
+                            39
                         ]
                     },
                     {
                         "content": "EC-JME399",
-                        "x": [
-                            40,
-                            40
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            40,
+                            40
                         ]
                     },
                     {
                         "content": "13/JME,gsw",
-                        "x": [
-                            41,
-                            41
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            41,
+                            41
                         ]
                     },
                     {
                         "content": "2",
-                        "x": [
-                            42,
-                            42
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            42,
+                            42
                         ]
                     },
                     {
                         "content": "130275170",
-                        "x": [
-                            43,
-                            43
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            43,
+                            43
                         ]
                     },
                     {
                         "content": "130762880",
-                        "x": [
-                            44,
-                            44
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            44,
+                            44
                         ]
                     },
                     {
                         "content": "RAB6C",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             45,
                             45
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             46,
                             46
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            47,
-                            47
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            47,
+                            47
                         ]
                     },
                     {
                         "content": "EC-JME104",
-                        "x": [
-                            48,
-                            48
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            48,
+                            48
                         ]
                     },
                     {
                         "content": "13/JME,gsw",
-                        "x": [
-                            49,
-                            49
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            49,
+                            49
                         ]
                     },
                     {
                         "content": "3",
-                        "x": [
-                            50,
-                            50
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            50,
+                            50
                         ]
                     },
                     {
                         "content": "85017098",
-                        "x": [
-                            51,
-                            51
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            51,
+                            51
                         ]
                     },
                     {
                         "content": "85603757",
-                        "x": [
-                            52,
-                            52
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            52,
+                            52
                         ]
                     },
                     {
                         "content": "CADM2",
-                        "x": [
-                            53,
-                            53
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            53,
+                            53
                         ]
                     },
                     {
                         "content": "ADHD",
-                        "x": [
-                            54,
-                            54
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            54,
+                            54
                         ]
                     },
                     {
                         "content": "[42,43]",
-                        "x": [
-                            55,
-                            55
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            55,
+                            55
                         ]
                     },
                     {
                         "content": "EC-CAE040",
-                        "x": [
-                            56,
-                            56
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            56,
+                            56
                         ]
                     },
                     {
                         "content": "7/CAE,gsw",
-                        "x": [
-                            57,
-                            57
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            57,
+                            57
                         ]
                     },
                     {
                         "content": "3",
-                        "x": [
-                            58,
-                            58
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            58,
+                            58
                         ]
                     },
                     {
                         "content": "165317672",
-                        "x": [
-                            59,
-                            59
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            59,
+                            59
                         ]
                     },
                     {
                         "content": "166886252",
-                        "x": [
-                            60,
-                            60
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            60,
+                            60
                         ]
                     },
                     {
                         "content": "BCHE",
-                        "x": [
-                            61,
-                            61
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            61,
+                            61
                         ]
                     },
                     {
                         "content": "ADHD,SCZ",
-                        "x": [
-                            62,
-                            62
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            62,
+                            62
                         ]
                     },
                     {
                         "content": "[44]",
-                        "x": [
-                            63,
-                            63
-                        ],
+                        "attributes": [],
                         "y": [
                             7,
                             7
+                        ],
+                        "x": [
+                            63,
+                            63
                         ]
                     },
                     {
                         "content": "EC-JME445",
-                        "x": [
-                            64,
-                            64
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            64,
+                            64
                         ]
                     },
                     {
                         "content": "26/JME",
-                        "x": [
-                            65,
-                            65
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            65,
+                            65
                         ]
                     },
                     {
                         "content": "4",
-                        "x": [
-                            66,
-                            66
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            66,
+                            66
                         ]
                     },
                     {
                         "content": "27778687",
-                        "x": [
-                            67,
-                            67
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            67,
+                            67
                         ]
                     },
                     {
                         "content": "31233363",
-                        "x": [
-                            68,
-                            68
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            68,
+                            68
                         ]
                     },
                     {
                         "content": "PCDH7",
-                        "x": [
-                            69,
-                            69
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            69,
+                            69
                         ]
                     },
                     {
                         "content": "GGE,EPI",
-                        "x": [
-                            70,
-                            70
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            70,
+                            70
                         ]
                     },
                     {
                         "content": "[45–48]",
-                        "x": [
-                            71,
-                            71
-                        ],
+                        "attributes": [],
                         "y": [
                             8,
                             8
+                        ],
+                        "x": [
+                            71,
+                            71
                         ]
                     },
                     {
                         "content": "EC-CAE099",
-                        "x": [
-                            72,
-                            72
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            72,
+                            72
                         ]
                     },
                     {
                         "content": "6/CAE,gsw",
-                        "x": [
-                            73,
-                            73
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            73,
+                            73
                         ]
                     },
                     {
                         "content": "5",
-                        "x": [
-                            74,
-                            74
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            74,
+                            74
                         ]
                     },
                     {
                         "content": "275875",
-                        "x": [
-                            75,
-                            75
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            75,
+                            75
                         ]
                     },
                     {
                         "content": "1257621",
-                        "x": [
-                            76,
-                            76
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            76,
+                            76
                         ]
                     },
                     {
                         "content": "SLC6A19,TERT",
+                        "attributes": [],
+                        "y": [
+                            9,
+                            9
+                        ],
                         "x": [
                             77,
                             77
-                        ],
-                        "y": [
-                            9,
-                            9
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            9,
+                            9
+                        ],
                         "x": [
                             78,
                             78
-                        ],
-                        "y": [
-                            9,
-                            9
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            79,
-                            79
-                        ],
+                        "attributes": [],
                         "y": [
                             9,
                             9
+                        ],
+                        "x": [
+                            79,
+                            79
                         ]
                     },
                     {
                         "content": "EC-JME481",
-                        "x": [
-                            80,
-                            80
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            80,
+                            80
                         ]
                     },
                     {
                         "content": "14/JME,gsw",
-                        "x": [
-                            81,
-                            81
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            81,
+                            81
                         ]
                     },
                     {
                         "content": "5",
-                        "x": [
-                            82,
-                            82
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            82,
+                            82
                         ]
                     },
                     {
                         "content": "28059042",
-                        "x": [
-                            83,
-                            83
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            83,
+                            83
                         ]
                     },
                     {
                         "content": "31736582",
-                        "x": [
-                            84,
-                            84
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            84,
+                            84
                         ]
                     },
                     {
                         "content": "DROSHA,CDH6",
-                        "x": [
-                            85,
-                            85
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            85,
+                            85
                         ]
                     },
                     {
                         "content": "SCZ",
-                        "x": [
-                            86,
-                            86
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            86,
+                            86
                         ]
                     },
                     {
                         "content": "[49–51]",
-                        "x": [
-                            87,
-                            87
-                        ],
+                        "attributes": [],
                         "y": [
                             10,
                             10
+                        ],
+                        "x": [
+                            87,
+                            87
                         ]
                     },
                     {
                         "content": "EC-CAE347",
-                        "x": [
-                            88,
-                            88
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            88,
+                            88
                         ]
                     },
                     {
                         "content": "9/CAE,gsw",
-                        "x": [
-                            89,
-                            89
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            89,
+                            89
                         ]
                     },
                     {
                         "content": "6",
-                        "x": [
-                            90,
-                            90
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            90,
+                            90
                         ]
                     },
                     {
                         "content": "144444363",
-                        "x": [
-                            91,
-                            91
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            91,
+                            91
                         ]
                     },
                     {
                         "content": "146880409",
-                        "x": [
-                            92,
-                            92
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            92,
+                            92
                         ]
                     },
                     {
                         "content": "EPM2A,GRM1",
-                        "x": [
-                            93,
-                            93
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            93,
+                            93
                         ]
                     },
                     {
                         "content": "SCZ,EPI",
-                        "x": [
-                            94,
-                            94
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            94,
+                            94
                         ]
                     },
                     {
                         "content": "[52,53]",
-                        "x": [
-                            95,
-                            95
-                        ],
+                        "attributes": [],
                         "y": [
                             11,
                             11
+                        ],
+                        "x": [
+                            95,
+                            95
                         ]
                     },
                     {
                         "content": "EC-CAE204",
-                        "x": [
-                            96,
-                            96
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            96,
+                            96
                         ]
                     },
                     {
                         "content": "8/CAE,gsw",
-                        "x": [
-                            97,
-                            97
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            97,
+                            97
                         ]
                     },
                     {
                         "content": "6",
-                        "x": [
-                            98,
-                            98
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            98,
+                            98
                         ]
                     },
                     {
                         "content": "162801345",
-                        "x": [
-                            99,
-                            99
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            99,
+                            99
                         ]
                     },
                     {
                         "content": "163287279",
-                        "x": [
-                            100,
-                            100
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            100,
+                            100
                         ]
                     },
                     {
                         "content": "PARK2",
-                        "x": [
-                            101,
-                            101
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            101,
+                            101
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            102,
-                            102
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            102,
+                            102
                         ]
                     },
                     {
                         "content": "[54–58]",
-                        "x": [
-                            103,
-                            103
-                        ],
+                        "attributes": [],
                         "y": [
                             12,
                             12
+                        ],
+                        "x": [
+                            103,
+                            103
                         ]
                     },
                     {
                         "content": "EC-JME461",
-                        "x": [
-                            104,
-                            104
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            104,
+                            104
                         ]
                     },
                     {
                         "content": "4/CAE",
-                        "x": [
-                            105,
-                            105
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            105,
+                            105
                         ]
                     },
                     {
                         "content": "7",
-                        "x": [
-                            106,
-                            106
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            106,
+                            106
                         ]
                     },
                     {
                         "content": "124586130",
-                        "x": [
-                            107,
-                            107
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            107,
+                            107
                         ]
                     },
                     {
                         "content": "126665734",
-                        "x": [
-                            108,
-                            108
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            108,
+                            108
                         ]
                     },
                     {
                         "content": "GRM8",
-                        "x": [
-                            109,
-                            109
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            109,
+                            109
                         ]
                     },
                     {
                         "content": "ASD,ADHD",
-                        "x": [
-                            110,
-                            110
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            110,
+                            110
                         ]
                     },
                     {
                         "content": "[59–61]",
-                        "x": [
-                            111,
-                            111
-                        ],
+                        "attributes": [],
                         "y": [
                             13,
                             13
+                        ],
+                        "x": [
+                            111,
+                            111
                         ]
                     },
                     {
                         "content": "EC-CAE158",
-                        "x": [
-                            112,
-                            112
-                        ],
+                        "attributes": [],
                         "y": [
                             14,
                             14
+                        ],
+                        "x": [
+                            112,
+                            112
                         ]
                     },
                     {
                         "content": "8/CAE,gsw",
-                        "x": [
-                            113,
-                            113
-                        ],
+                        "attributes": [],
                         "y": [
                             14,
                             14
+                        ],
+                        "x": [
+                            113,
+                            113
                         ]
                     },
                     {
                         "content": "7",
-                        "x": [
-                            114,
-                            114
-                        ],
+                        "attributes": [],
                         "y": [
                             14,
                             14
+                        ],
+                        "x": [
+                            114,
+                            114
                         ]
                     },
                     {
                         "content": "143223069",
-                        "x": [
-                            115,
-                            115
-                        ],
+                        "attributes": [],
                         "y": [
                             14,
                             14
+                        ],
+                        "x": [
+                            115,
+                            115
                         ]
                     },
                     {
                         "content": "143873940",
-                        "x": [
-                            116,
-                            116
-                        ],
+                        "attributes": [],
                         "y": [
                             14,
                             14
+                        ],
+                        "x": [
+                            116,
+                            116
                         ]
                     },
                     {
                         "content": "FAM11C5,FAM115A",
+                        "attributes": [],
+                        "y": [
+                            14,
+                            14
+                        ],
                         "x": [
                             117,
                             117
-                        ],
-                        "y": [
-                            14,
-                            14
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            14,
+                            14
+                        ],
                         "x": [
                             118,
                             118
-                        ],
-                        "y": [
-                            14,
-                            14
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            119,
-                            119
-                        ],
+                        "attributes": [],
                         "y": [
                             14,
                             14
+                        ],
+                        "x": [
+                            119,
+                            119
                         ]
                     },
                     {
                         "content": "EC-EGTCS130",
-                        "x": [
-                            120,
-                            120
-                        ],
+                        "attributes": [],
                         "y": [
                             15,
                             15
+                        ],
+                        "x": [
+                            120,
+                            120
                         ]
                     },
                     {
                         "content": "25/EGTCS,gsw",
-                        "x": [
-                            121,
-                            121
-                        ],
+                        "attributes": [],
                         "y": [
                             15,
                             15
+                        ],
+                        "x": [
+                            121,
+                            121
                         ]
                     },
                     {
                         "content": "8",
-                        "x": [
-                            122,
-                            122
-                        ],
+                        "attributes": [],
                         "y": [
                             15,
                             15
+                        ],
+                        "x": [
+                            122,
+                            122
                         ]
                     },
                     {
                         "content": "99979097",
-                        "x": [
-                            123,
-                            123
-                        ],
+                        "attributes": [],
                         "y": [
                             15,
                             15
+                        ],
+                        "x": [
+                            123,
+                            123
                         ]
                     },
                     {
                         "content": "100538070",
-                        "x": [
-                            124,
-                            124
-                        ],
+                        "attributes": [],
                         "y": [
                             15,
                             15
+                        ],
+                        "x": [
+                            124,
+                            124
                         ]
                     },
                     {
                         "content": "VPS13B",
+                        "attributes": [],
+                        "y": [
+                            15,
+                            15
+                        ],
                         "x": [
                             125,
                             125
-                        ],
-                        "y": [
-                            15,
-                            15
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            15,
+                            15
+                        ],
                         "x": [
                             126,
                             126
-                        ],
-                        "y": [
-                            15,
-                            15
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            127,
-                            127
-                        ],
+                        "attributes": [],
                         "y": [
                             15,
                             15
+                        ],
+                        "x": [
+                            127,
+                            127
                         ]
                     },
                     {
                         "content": "EC-JME417",
-                        "x": [
-                            128,
-                            128
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            128,
+                            128
                         ]
                     },
                     {
                         "content": "17/JME,gsw",
-                        "x": [
-                            129,
-                            129
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            129,
+                            129
                         ]
                     },
                     {
                         "content": "8",
-                        "x": [
-                            130,
-                            130
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            130,
+                            130
                         ]
                     },
                     {
                         "content": "142563566",
-                        "x": [
-                            131,
-                            131
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            131,
+                            131
                         ]
                     },
                     {
                         "content": "143798641",
-                        "x": [
-                            132,
-                            132
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            132,
+                            132
                         ]
                     },
                     {
                         "content": "TSNARE1,BAI1,ARC",
-                        "x": [
-                            133,
-                            133
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            133,
+                            133
                         ]
                     },
                     {
                         "content": "SCZ,BPD",
-                        "x": [
-                            134,
-                            134
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            134,
+                            134
                         ]
                     },
                     {
                         "content": "[62]",
-                        "x": [
-                            135,
-                            135
-                        ],
+                        "attributes": [],
                         "y": [
                             16,
                             16
+                        ],
+                        "x": [
+                            135,
+                            135
                         ]
                     },
                     {
                         "content": "EC-JAE119",
-                        "x": [
-                            136,
-                            136
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            136,
+                            136
                         ]
                     },
                     {
                         "content": "16/JAE,gsw",
-                        "x": [
-                            137,
-                            137
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            137,
+                            137
                         ]
                     },
                     {
                         "content": "8",
-                        "x": [
-                            138,
-                            138
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            138,
+                            138
                         ]
                     },
                     {
                         "content": "142850077",
-                        "x": [
-                            139,
-                            139
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            139,
+                            139
                         ]
                     },
                     {
                         "content": "143549806",
-                        "x": [
-                            140,
-                            140
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            140,
+                            140
                         ]
                     },
                     {
                         "content": "TSNARE1,BAI1",
-                        "x": [
-                            141,
-                            141
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            141,
+                            141
                         ]
                     },
                     {
                         "content": "SCZ,BPD",
-                        "x": [
-                            142,
-                            142
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            142,
+                            142
                         ]
                     },
                     {
                         "content": "[62]",
-                        "x": [
-                            143,
-                            143
-                        ],
+                        "attributes": [],
                         "y": [
                             17,
                             17
+                        ],
+                        "x": [
+                            143,
+                            143
                         ]
                     },
                     {
                         "content": "EC-CAE300",
-                        "x": [
-                            144,
-                            144
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            144,
+                            144
                         ]
                     },
                     {
                         "content": "10/CAE",
-                        "x": [
-                            145,
-                            145
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            145,
+                            145
                         ]
                     },
                     {
                         "content": "9",
-                        "x": [
-                            146,
-                            146
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            146,
+                            146
                         ]
                     },
                     {
                         "content": "76601085",
-                        "x": [
-                            147,
-                            147
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            147,
+                            147
                         ]
                     },
                     {
                         "content": "77182821",
-                        "x": [
-                            148,
-                            148
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            148,
+                            148
                         ]
                     },
                     {
                         "content": "RORB",
-                        "x": [
-                            149,
-                            149
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            149,
+                            149
                         ]
                     },
                     {
                         "content": "EPI,ID",
-                        "x": [
-                            150,
-                            150
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            150,
+                            150
                         ]
                     },
                     {
                         "content": "[63–65]",
-                        "x": [
-                            151,
-                            151
-                        ],
+                        "attributes": [],
                         "y": [
                             18,
                             18
+                        ],
+                        "x": [
+                            151,
+                            151
                         ]
                     },
                     {
                         "content": "EC-JME005",
-                        "x": [
-                            152,
-                            152
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            152,
+                            152
                         ]
                     },
                     {
                         "content": "12/JME,gsw",
-                        "x": [
-                            153,
-                            153
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            153,
+                            153
                         ]
                     },
                     {
                         "content": "10",
-                        "x": [
-                            154,
-                            154
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            154,
+                            154
                         ]
                     },
                     {
                         "content": "27836576",
-                        "x": [
-                            155,
-                            155
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            155,
+                            155
                         ]
                     },
                     {
                         "content": "28429513",
-                        "x": [
-                            156,
-                            156
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            156,
+                            156
                         ]
                     },
                     {
                         "content": "MPP7,ARMC4,MKX",
-                        "x": [
-                            157,
-                            157
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            157,
+                            157
                         ]
                     },
                     {
                         "content": "ID",
-                        "x": [
-                            158,
-                            158
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            158,
+                            158
                         ]
                     },
                     {
                         "content": "[66]",
-                        "x": [
-                            159,
-                            159
-                        ],
+                        "attributes": [],
                         "y": [
                             19,
                             19
+                        ],
+                        "x": [
+                            159,
+                            159
                         ]
                     },
                     {
                         "content": "EC-JME054",
-                        "x": [
-                            160,
-                            160
-                        ],
+                        "attributes": [],
                         "y": [
                             20,
                             20
+                        ],
+                        "x": [
+                            160,
+                            160
                         ]
                     },
                     {
                         "content": "20/JME,gsw",
-                        "x": [
-                            161,
-                            161
-                        ],
+                        "attributes": [],
                         "y": [
                             20,
                             20
+                        ],
+                        "x": [
+                            161,
+                            161
                         ]
                     },
                     {
                         "content": "11",
-                        "x": [
-                            162,
-                            162
-                        ],
+                        "attributes": [],
                         "y": [
                             20,
                             20
+                        ],
+                        "x": [
+                            162,
+                            162
                         ]
                     },
                     {
                         "content": "4167416",
-                        "x": [
-                            163,
-                            163
-                        ],
+                        "attributes": [],
                         "y": [
                             20,
                             20
+                        ],
+                        "x": [
+                            163,
+                            163
                         ]
                     },
                     {
                         "content": "5262622",
-                        "x": [
-                            164,
-                            164
-                        ],
+                        "attributes": [],
                         "y": [
                             20,
                             20
+                        ],
+                        "x": [
+                            164,
+                            164
                         ]
                     },
                     {
                         "content": "C11orf40,TRIM68",
+                        "attributes": [],
+                        "y": [
+                            20,
+                            20
+                        ],
                         "x": [
                             165,
                             165
-                        ],
-                        "y": [
-                            20,
-                            20
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            20,
+                            20
+                        ],
                         "x": [
                             166,
                             166
-                        ],
-                        "y": [
-                            20,
-                            20
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            167,
-                            167
-                        ],
+                        "attributes": [],
                         "y": [
                             20,
                             20
+                        ],
+                        "x": [
+                            167,
+                            167
                         ]
                     },
                     {
                         "content": "EC-JME425",
-                        "x": [
-                            168,
-                            168
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            168,
+                            168
                         ]
                     },
                     {
                         "content": "13/JME",
-                        "x": [
-                            169,
-                            169
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            169,
+                            169
                         ]
                     },
                     {
                         "content": "12",
-                        "x": [
-                            170,
-                            170
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            170,
+                            170
                         ]
                     },
                     {
                         "content": "72135173",
-                        "x": [
-                            171,
-                            171
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            171,
+                            171
                         ]
                     },
                     {
                         "content": "73995884",
-                        "x": [
-                            172,
-                            172
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            172,
+                            172
                         ]
                     },
                     {
                         "content": "TBC1D15,TPH2",
-                        "x": [
-                            173,
-                            173
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            173,
+                            173
                         ]
                     },
                     {
                         "content": "ADHD",
-                        "x": [
-                            174,
-                            174
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            174,
+                            174
                         ]
                     },
                     {
                         "content": "[67–69]",
-                        "x": [
-                            175,
-                            175
-                        ],
+                        "attributes": [],
                         "y": [
                             21,
                             21
+                        ],
+                        "x": [
+                            175,
+                            175
                         ]
                     },
                     {
                         "content": "EC-JME642",
-                        "x": [
-                            176,
-                            176
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            176,
+                            176
                         ]
                     },
                     {
                         "content": "15JME,gsw",
-                        "x": [
-                            177,
-                            177
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            177,
+                            177
                         ]
                     },
                     {
                         "content": "15",
-                        "x": [
-                            178,
-                            178
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            178,
+                            178
                         ]
                     },
                     {
                         "content": "84915113",
-                        "x": [
-                            179,
-                            179
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            179,
+                            179
                         ]
                     },
                     {
                         "content": "85726714",
-                        "x": [
-                            180,
-                            180
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            180,
+                            180
                         ]
                     },
                     {
                         "content": "WDR73,PDE8A",
-                        "x": [
-                            181,
-                            181
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            181,
+                            181
                         ]
                     },
                     {
                         "content": "MCP",
-                        "x": [
-                            182,
-                            182
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            182,
+                            182
                         ]
                     },
                     {
                         "content": "[70]",
-                        "x": [
-                            183,
-                            183
-                        ],
+                        "attributes": [],
                         "y": [
                             22,
                             22
+                        ],
+                        "x": [
+                            183,
+                            183
                         ]
                     },
                     {
                         "content": "EC-CAE286*",
-                        "x": [
-                            184,
-                            184
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            184,
+                            184
                         ]
                     },
                     {
                         "content": "3/CAE,gsw",
-                        "x": [
-                            185,
-                            185
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            185,
+                            185
                         ]
                     },
                     {
                         "content": "16",
-                        "x": [
-                            186,
-                            186
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            186,
+                            186
                         ]
                     },
                     {
                         "content": "5615773",
-                        "x": [
-                            187,
-                            187
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            187,
+                            187
                         ]
                     },
                     {
                         "content": "6512138",
-                        "x": [
-                            188,
-                            188
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            188,
+                            188
                         ]
                     },
                     {
                         "content": "RBFOX1",
-                        "x": [
-                            189,
-                            189
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            189,
+                            189
                         ]
                     },
                     {
                         "content": "ASD,SCZ,EPI",
-                        "x": [
-                            190,
-                            190
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            190,
+                            190
                         ]
                     },
                     {
                         "content": "[27,71–73]",
-                        "x": [
-                            191,
-                            191
-                        ],
+                        "attributes": [],
                         "y": [
                             23,
                             23
+                        ],
+                        "x": [
+                            191,
+                            191
                         ]
                     },
                     {
                         "content": "EC-CAE226",
-                        "x": [
-                            192,
-                            192
-                        ],
+                        "attributes": [],
                         "y": [
                             24,
                             24
+                        ],
+                        "x": [
+                            192,
+                            192
                         ]
                     },
                     {
                         "content": "6/CAE,gsw",
-                        "x": [
-                            193,
-                            193
-                        ],
+                        "attributes": [],
                         "y": [
                             24,
                             24
+                        ],
+                        "x": [
+                            193,
+                            193
                         ]
                     },
                     {
                         "content": "18",
-                        "x": [
-                            194,
-                            194
-                        ],
+                        "attributes": [],
                         "y": [
                             24,
                             24
+                        ],
+                        "x": [
+                            194,
+                            194
                         ]
                     },
                     {
                         "content": "13982898",
-                        "x": [
-                            195,
-                            195
-                        ],
+                        "attributes": [],
                         "y": [
                             24,
                             24
+                        ],
+                        "x": [
+                            195,
+                            195
                         ]
                     },
                     {
                         "content": "14969710",
-                        "x": [
-                            196,
-                            196
-                        ],
+                        "attributes": [],
                         "y": [
                             24,
                             24
+                        ],
+                        "x": [
+                            196,
+                            196
                         ]
                     },
                     {
                         "content": "ZNF519",
+                        "attributes": [],
+                        "y": [
+                            24,
+                            24
+                        ],
                         "x": [
                             197,
                             197
-                        ],
-                        "y": [
-                            24,
-                            24
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            24,
+                            24
+                        ],
                         "x": [
                             198,
                             198
-                        ],
-                        "y": [
-                            24,
-                            24
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            199,
-                            199
-                        ],
+                        "attributes": [],
                         "y": [
                             24,
                             24
+                        ],
+                        "x": [
+                            199,
+                            199
                         ]
                     },
                     {
                         "content": "EC-CAE161",
-                        "x": [
-                            200,
-                            200
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            200,
+                            200
                         ]
                     },
                     {
                         "content": "7/CAE,gsw",
-                        "x": [
-                            201,
-                            201
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            201,
+                            201
                         ]
                     },
                     {
                         "content": "20",
-                        "x": [
-                            202,
-                            202
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            202,
+                            202
                         ]
                     },
                     {
                         "content": "8099277",
-                        "x": [
-                            203,
-                            203
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            203,
+                            203
                         ]
                     },
                     {
                         "content": "8572225",
-                        "x": [
-                            204,
-                            204
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            204,
+                            204
                         ]
                     },
                     {
                         "content": "PLCB1",
-                        "x": [
-                            205,
-                            205
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            205,
+                            205
                         ]
                     },
                     {
                         "content": "EE,EPI,SCZ",
-                        "x": [
-                            206,
-                            206
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            206,
+                            206
                         ]
                     },
                     {
                         "content": "[54,74–77]",
-                        "x": [
-                            207,
-                            207
-                        ],
+                        "attributes": [],
                         "y": [
                             25,
                             25
+                        ],
+                        "x": [
+                            207,
+                            207
                         ]
                     },
                     {
                         "content": "EC-EGTCS119",
-                        "x": [
-                            208,
-                            208
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            208,
+                            208
                         ]
                     },
                     {
                         "content": "15/EGTCS,gsw",
-                        "x": [
-                            209,
-                            209
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            209,
+                            209
                         ]
                     },
                     {
                         "content": "20",
-                        "x": [
-                            210,
-                            210
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            210,
+                            210
                         ]
                     },
                     {
                         "content": "14902412",
-                        "x": [
-                            211,
-                            211
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            211,
+                            211
                         ]
                     },
                     {
                         "content": "15312347",
-                        "x": [
-                            212,
-                            212
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            212,
+                            212
                         ]
                     },
                     {
                         "content": "MACROD2",
-                        "x": [
-                            213,
-                            213
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            213,
+                            213
                         ]
                     },
                     {
                         "content": "AUT,ADHD",
-                        "x": [
-                            214,
-                            214
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            214,
+                            214
                         ]
                     },
                     {
                         "content": "[78–82]",
-                        "x": [
-                            215,
-                            215
-                        ],
+                        "attributes": [],
                         "y": [
                             26,
                             26
+                        ],
+                        "x": [
+                            215,
+                            215
                         ]
                     },
                     {
                         "content": "EC-JME101",
-                        "x": [
-                            216,
-                            216
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            216,
+                            216
                         ]
                     },
                     {
                         "content": "24/JME",
-                        "x": [
-                            217,
-                            217
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            217,
+                            217
                         ]
                     },
                     {
                         "content": "21",
-                        "x": [
-                            218,
-                            218
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            218,
+                            218
                         ]
                     },
                     {
                         "content": "45866974",
-                        "x": [
-                            219,
-                            219
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            219,
+                            219
                         ]
                     },
                     {
                         "content": "48096945",
-                        "x": [
-                            220,
-                            220
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            220,
+                            220
                         ]
                     },
                     {
                         "content": "ADARB1,S100B",
-                        "x": [
-                            221,
-                            221
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            221,
+                            221
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            222,
-                            222
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            222,
+                            222
                         ]
                     },
                     {
                         "content": "[83,84]",
-                        "x": [
-                            223,
-                            223
-                        ],
+                        "attributes": [],
                         "y": [
                             27,
                             27
+                        ],
+                        "x": [
+                            223,
+                            223
                         ]
                     }
                 ],
@@ -6838,233 +7234,260 @@
                 "cells": [
                     {
                         "content": "Gene-set library",
-                        "x": [
+                        "attributes": [
+                            "th"
+                        ],
+                        "y": [
                             0,
                             0
                         ],
-                        "y": [
+                        "x": [
                             0,
                             0
                         ]
                     },
                     {
                         "content": "Padj-value",
-                        "x": [
-                            1,
-                            1
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            1,
+                            1
                         ]
                     },
                     {
                         "content": "Genes",
-                        "x": [
-                            2,
-                            2
+                        "attributes": [
+                            "th"
                         ],
                         "y": [
                             0,
                             0
+                        ],
+                        "x": [
+                            2,
+                            2
                         ]
                     },
                     {
                         "content": "MGI Mammalian Phenotype",
+                        "attributes": [],
+                        "y": [
+                            1,
+                            1
+                        ],
                         "x": [
                             3,
                             3
-                        ],
-                        "y": [
-                            1,
-                            1
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            1,
+                            1
+                        ],
                         "x": [
                             4,
                             4
-                        ],
-                        "y": [
-                            1,
-                            1
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            5,
-                            5
-                        ],
+                        "attributes": [],
                         "y": [
                             1,
                             1
+                        ],
+                        "x": [
+                            5,
+                            5
                         ]
                     },
                     {
                         "content": "abnormal emotion/affect behaviour (MP:0002572)",
-                        "x": [
-                            6,
-                            6
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            6,
+                            6
                         ]
                     },
                     {
                         "content": "1.30E-03",
-                        "x": [
-                            7,
-                            7
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            7,
+                            7
                         ]
                     },
                     {
                         "content": "ARC NTAN1 RORB PARK2 GRM1 GRM8 APBA2 CHRNA7 CHL1 TPH2 COMT/ZDHHC/RTN4R",
-                        "x": [
-                            8,
-                            8
-                        ],
+                        "attributes": [],
                         "y": [
                             2,
                             2
+                        ],
+                        "x": [
+                            8,
+                            8
                         ]
                     },
                     {
                         "content": "GO biological process",
+                        "attributes": [],
+                        "y": [
+                            3,
+                            3
+                        ],
                         "x": [
                             9,
                             9
-                        ],
-                        "y": [
-                            3,
-                            3
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            3,
+                            3
+                        ],
                         "x": [
                             10,
                             10
-                        ],
-                        "y": [
-                            3,
-                            3
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            11,
-                            11
-                        ],
+                        "attributes": [],
                         "y": [
                             3,
                             3
+                        ],
+                        "x": [
+                            11,
+                            11
                         ]
                     },
                     {
                         "content": "cognition (GO:0050890)",
-                        "x": [
-                            12,
-                            12
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            12,
+                            12
                         ]
                     },
                     {
                         "content": "0.012",
-                        "x": [
-                            13,
-                            13
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            13,
+                            13
                         ]
                     },
                     {
                         "content": "ARC OR52B4 EPM2A NTAN1 PARK2 NRXN1 S100B BCHE CYFIP1 CHRNA7 PLCB1 CHL1 DGCR2/COMT",
-                        "x": [
-                            14,
-                            14
-                        ],
+                        "attributes": [],
                         "y": [
                             4,
                             4
+                        ],
+                        "x": [
+                            14,
+                            14
                         ]
                     },
                     {
                         "content": "PPI Hub Proteins",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             15,
                             15
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
+                        "attributes": [],
+                        "y": [
+                            5,
+                            5
+                        ],
                         "x": [
                             16,
                             16
-                        ],
-                        "y": [
-                            5,
-                            5
                         ]
                     },
                     {
                         "content": "",
-                        "x": [
-                            17,
-                            17
-                        ],
+                        "attributes": [],
                         "y": [
                             5,
                             5
+                        ],
+                        "x": [
+                            17,
+                            17
                         ]
                     },
                     {
                         "content": "GRIN2B",
-                        "x": [
-                            18,
-                            18
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            18,
+                            18
                         ]
                     },
                     {
                         "content": "0.018",
-                        "x": [
-                            19,
-                            19
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            19,
+                            19
                         ]
                     },
                     {
                         "content": "ARC TJP1 MAPK3 MYH11 EXOC3 NRXN1 PARK2 PLCB1 GRM1",
-                        "x": [
-                            20,
-                            20
-                        ],
+                        "attributes": [],
                         "y": [
                             6,
                             6
+                        ],
+                        "x": [
+                            20,
+                            20
                         ]
                     }
                 ],
