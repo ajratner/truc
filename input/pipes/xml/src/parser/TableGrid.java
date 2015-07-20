@@ -28,11 +28,28 @@ public class TableGrid {
     JSONArray cells = new JSONArray();
     for (int i = 0; i < cellContents.size(); i++) {
       JSONObject cell = new JSONObject();
+
+      // Content
       cell.put("content", cellContents.get(i));
-      cell.put("x-start", cellCoordinates.get(i)[0]);
-      cell.put("x-end", cellCoordinates.get(i)[1]);
-      cell.put("y-start", cellCoordinates.get(i)[2]);
-      cell.put("y-end", cellCoordinates.get(i)[3]);
+
+      // Coordinates- compressed format
+      Integer[] coords = cellCoordinates.get(i);
+      if (coords[0] == coords[1]) {
+        cell.put("x", coords[0]);
+      } else {
+        JSONArray xs = new JSONArray();
+        xs.add(coords[0]);
+        xs.add(coords[1]);
+        cell.put("x", xs);
+      }
+      if (coords[2] == coords[3]) {
+        cell.put("y", coords[2]);
+      } else {
+        JSONArray ys = new JSONArray();
+        ys.add(coords[2]);
+        ys.add(coords[3]);
+        cell.put("y", ys);
+      }
       cells.add(cell);
     }
     tableGrid.put("cells", cells);

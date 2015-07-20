@@ -34,7 +34,7 @@
         {
             "name": "IPython",
             "plugin": "IPython",
-            "setup": "%matplotlib inline\nimport numpy\nimport matplotlib\nfrom matplotlib import pylab, mlab, pyplot\nnp = numpy\nplt = pyplot\nfrom IPython.display import display\nfrom IPython.core.pylabtools import figsize, getfigs\nfrom pylab import *\nfrom numpy import *\n",
+            "setup": "%load_ext autoreload\n%autoreload 2\n%matplotlib inline\nimport numpy\nimport matplotlib\nfrom matplotlib import pylab, mlab, pyplot\nnp = numpy\nplt = pyplot\nfrom IPython.display import display\nfrom IPython.core.pylabtools import figsize, getfigs\nfrom pylab import *\nfrom numpy import *",
             "view": {
                 "cm": {
                     "mode": "python"
@@ -55,7 +55,9 @@
             "id": "markdown6dCatD",
             "type": "markdown",
             "body": [
-                "Playing around with *Beaker* / basic framework for debugging table parser, table extraction, etc."
+                "Playing around with *Beaker* / basic framework for debugging table parser, table extraction, etc.",
+                "",
+                "**One drawback: no good way to export a cell to a code file e.g. .py??**"
             ],
             "evaluatorReader": false
         },
@@ -102,10 +104,10 @@
             "input": {
                 "body": [
                     "var cellSort = function(a, b) {",
-                    "  if (a.y_start == b.y_start) {",
-                    "    return a.x_start - b.x_start;",
+                    "  if (a.y[0] == b.y[0]) {",
+                    "    return a.x[0] - b.x[0];",
                     "  } else {",
-                    "    return a.y_start - b.y_start;",
+                    "    return a.y[0] - b.y[0];",
                     "  }",
                     "}",
                     "",
@@ -117,8 +119,8 @@
                     "  for (var i=0; i < cells.length; i++) {",
                     "    var cell = cells[i];",
                     "    //beaker.print(cell);",
-                    "    if (cell.y_start > y) {",
-                    "      y = cell.y_start;",
+                    "    if (cell.y[0] > y) {",
+                    "      y = cell.y[0];",
                     "      html += \"</tr><tr>\";",
                     "    }",
                     "    html += \"<td>\" + cell.content + \"</td>\";",
@@ -135,86 +137,38 @@
                 "result": "ERROR: circular objects are not supported",
                 "selectedType": "Text",
                 "pluginName": "JavaScript",
-                "elapsedTime": 19
+                "elapsedTime": 36
             },
             "evaluatorReader": true,
             "lineCount": 27
         },
         {
-            "id": "codeYxIbf8",
+            "id": "codedaD4FV",
             "type": "code",
             "evaluator": "IPython",
             "input": {
                 "body": [
-                    "import json",
+                    "import sys",
+                    "sys.path.append('/Users/aratner/repos/truc/src')",
+                    "from table_struct import load_table_grids, TableGrid, TableCell",
                     "",
-                    "class TableCell:",
-                    "    ",
-                    "    # init from dict",
-                    "    def __init__(self, cell):",
-                    "        self.x_start = int(cell['x-start'])",
-                    "        self.x_end = int(cell['x-end'])",
-                    "        self.y_start = int(cell['y-start'])",
-                    "        self.y_end = int(cell['y-end'])",
-                    "        self.content = cell['content'].encode('utf8')",
-                    "    ",
-                    "    def to_dict(self):",
-                    "        return {",
-                    "            \"x_start\" : self.x_start,",
-                    "            \"x_end\"   : self.x_end,",
-                    "            \"y_start\" : self.y_start,",
-                    "            \"y_end\"   : self.y_end,",
-                    "            \"content\" : self.content}",
-                    "    ",
-                    "    def __repr__(self):",
-                    "        return '<\"%s\" @ (%s, %s, %s, %s)>' % (self.content, self.x_start, self.x_end, self.y_start, self.y_end)",
-                    "",
-                    "class TableGrid:",
-                    "    ",
-                    "    # init from dict",
-                    "    def __init__(self, table_grid):",
-                    "        self.id = table_grid['id']",
-                    "        self.cells = [TableCell(cell) for cell in table_grid['cells']]",
-                    "    ",
-                    "    def to_dict(self):",
-                    "        return {\"id\":self.id, \"cells\":[tc.to_dict() for tc in self.cells]}",
-                    "    ",
-                    "    def __repr__(self):",
-                    "        return '<Table %s: %s cells>' % (self.id, len(self.cells))",
-                    "",
-                    "    ",
-                    "# Load in JSON TableGrid objects",
-                    "tables = []",
+                    "# load tables from json",
                     "TG_PATH = '/Users/aratner/repos/truc/input/pipes/xml/out.json'",
-                    "with open(TG_PATH, 'rb') as f:",
-                    "    for line in f:",
-                    "        tables.append(TableGrid(json.loads(line.strip())))",
-                    "for table in tables:",
-                    "    print table",
-                    "        ",
-                    "# output -> js",
+                    "tables = load_table_grids(TG_PATH)",
+                    "",
+                    "#print tables[0].to_dict()",
                     "beaker.tables = [table.to_dict() for table in tables]"
-                ],
-                "hidden": true
+                ]
             },
             "output": {
                 "state": {},
-                "selectedType": "Results",
+                "selectedType": "Hidden",
                 "pluginName": "IPython",
-                "shellId": "A628C35783F84F77B3033F04B7A3CBAD",
-                "elapsedTime": 206,
-                "result": {
-                    "type": "Results",
-                    "outputdata": [
-                        {
-                            "type": "out",
-                            "value": "<Table 10.1371.journal.pgen.1005226.Table: 66 cells>\n<Table 10.1371.journal.pgen.1005226.Table.1: 63 cells>\n<Table 10.1371.journal.pgen.1005226.Table.1: 224 cells>\n<Table 10.1371.journal.pgen.1005226.Table.1: 21 cells>\n"
-                        }
-                    ]
-                }
+                "shellId": "7919CDF6602C490B8D50CCCA19EDDEDC",
+                "elapsedTime": 331
             },
             "evaluatorReader": true,
-            "lineCount": 48
+            "lineCount": 10
         }
     ],
     "namespace": {
@@ -2986,465 +2940,729 @@
                 "cells": [
                     {
                         "content": "Microdeletions",
-                        "x_start": 0,
-                        "x_end": 0,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            0,
+                            0
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Genes N",
-                        "x_start": 1,
-                        "x_end": 1,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            1,
+                            1
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "GGE N = 1,366",
-                        "x_start": 2,
-                        "x_end": 2,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            2,
+                            2
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "CTR N = 5,234",
-                        "x_start": 3,
-                        "x_end": 3,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            3,
+                            3
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "P-value^",
-                        "x_start": 4,
-                        "x_end": 4,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            4,
+                            4
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "OR, 95%-CI",
-                        "x_start": 5,
-                        "x_end": 5,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            5,
+                            5
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Autosomal microdeletions",
-                        "x_start": 6,
-                        "x_end": 6,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            6,
+                            6
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 7,
-                        "x_end": 7,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            7,
+                            7
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "100",
-                        "x_start": 8,
-                        "x_end": 8,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            8,
+                            8
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "208",
-                        "x_start": 9,
-                        "x_end": 9,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            9,
+                            9
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "1.77E-07",
-                        "x_start": 10,
-                        "x_end": 10,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            10,
+                            10
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "1.91; 1.48–2.46",
-                        "x_start": 11,
-                        "x_end": 11,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            11,
+                            11
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "RefSeq NM genes",
-                        "x_start": 12,
-                        "x_end": 12,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            12,
+                            12
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "18,299",
-                        "x_start": 13,
-                        "x_end": 13,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            13,
+                            13
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "85",
-                        "x_start": 14,
-                        "x_end": 14,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            14,
+                            14
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "172",
-                        "x_start": 15,
-                        "x_end": 15,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            15,
+                            15
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "5.86E-07",
-                        "x_start": 16,
-                        "x_end": 16,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            16,
+                            16
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "1.95; 1.48–2.57",
-                        "x_start": 17,
-                        "x_end": 17,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            17,
+                            17
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "Brain-expressed genes",
-                        "x_start": 18,
-                        "x_end": 18,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            18,
+                            18
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "8,878",
-                        "x_start": 19,
-                        "x_end": 19,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            19,
+                            19
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "70",
-                        "x_start": 20,
-                        "x_end": 20,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            20,
+                            20
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "126",
-                        "x_start": 21,
-                        "x_end": 21,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            21,
+                            21
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "1.38E-07",
-                        "x_start": 22,
-                        "x_end": 22,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            22,
+                            22
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "2.19; 1.61–2.98",
-                        "x_start": 23,
-                        "x_end": 23,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            23,
+                            23
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "Hotspot microdeletions",
-                        "x_start": 24,
-                        "x_end": 24,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            24,
+                            24
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 25,
-                        "x_end": 25,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            25,
+                            25
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "38",
-                        "x_start": 26,
-                        "x_end": 26,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            26,
+                            26
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "20",
-                        "x_start": 27,
-                        "x_end": 27,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            27,
+                            27
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "2.61E-17",
-                        "x_start": 28,
-                        "x_end": 28,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            28,
+                            28
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "7.46; 4.20–13.3",
-                        "x_start": 29,
-                        "x_end": 29,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            29,
+                            29
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "Gene-set enrichment",
-                        "x_start": 30,
-                        "x_end": 30,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            30,
+                            30
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 31,
-                        "x_end": 31,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            31,
+                            31
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 32,
-                        "x_end": 32,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            32,
+                            32
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 33,
-                        "x_end": 33,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            33,
+                            33
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 34,
-                        "x_end": 34,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            34,
+                            34
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 35,
-                        "x_end": 35,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            35,
+                            35
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "Neurodevelopmental genes#",
-                        "x_start": 36,
-                        "x_end": 36,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            36,
+                            36
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "1,547",
-                        "x_start": 37,
-                        "x_end": 37,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            37,
+                            37
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "59",
-                        "x_start": 38,
-                        "x_end": 38,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            38,
+                            38
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "51",
-                        "x_start": 39,
-                        "x_end": 39,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            39,
+                            39
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "8.02E-18",
-                        "x_start": 40,
-                        "x_end": 40,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            40,
+                            40
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "4.58; 3.09–6.82",
-                        "x_start": 41,
-                        "x_end": 41,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            41,
+                            41
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "ASD-related genes*",
-                        "x_start": 42,
-                        "x_end": 42,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            42,
+                            42
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "1,669",
-                        "x_start": 43,
-                        "x_end": 43,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            43,
+                            43
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "45",
-                        "x_start": 44,
-                        "x_end": 44,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            44,
+                            44
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "43",
-                        "x_start": 45,
-                        "x_end": 45,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            45,
+                            45
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "1.29E-12",
-                        "x_start": 46,
-                        "x_end": 46,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            46,
+                            46
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "4.11; 2.64–6.40",
-                        "x_start": 47,
-                        "x_end": 47,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            47,
+                            47
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "Control gene-sets",
-                        "x_start": 48,
-                        "x_end": 48,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            48,
+                            48
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 49,
-                        "x_end": 49,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            49,
+                            49
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 50,
-                        "x_end": 50,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            50,
+                            50
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 51,
-                        "x_end": 51,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            51,
+                            51
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 52,
-                        "x_end": 52,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            52,
+                            52
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 53,
-                        "x_end": 53,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            53,
+                            53
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "Randomly selected genes",
-                        "x_start": 54,
-                        "x_end": 54,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            54,
+                            54
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "3,256",
-                        "x_start": 55,
-                        "x_end": 55,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            55,
+                            55
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "12",
-                        "x_start": 56,
-                        "x_end": 56,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            56,
+                            56
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "35",
-                        "x_start": 57,
-                        "x_end": 57,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            57,
+                            57
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "0.412",
-                        "x_start": 58,
-                        "x_end": 58,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            58,
+                            58
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "1.32; 0.65–2.64",
-                        "x_start": 59,
-                        "x_end": 59,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            59,
+                            59
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "Not brain-expressed genes",
-                        "x_start": 60,
-                        "x_end": 60,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            60,
+                            60
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "3,837",
-                        "x_start": 61,
-                        "x_end": 61,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            61,
+                            61
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "13",
-                        "x_start": 62,
-                        "x_end": 62,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            62,
+                            62
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "58",
-                        "x_start": 63,
-                        "x_end": 63,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            63,
+                            63
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "0.618",
-                        "x_start": 64,
-                        "x_end": 64,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            64,
+                            64
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "0.86; 0.45–1.62",
-                        "x_start": 65,
-                        "x_end": 65,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            65,
+                            65
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     }
                 ],
                 "id": "10.1371.journal.pgen.1005226.Table"
@@ -3453,444 +3671,696 @@
                 "cells": [
                     {
                         "content": "Recurrent Microdeletion",
-                        "x_start": 0,
-                        "x_end": 0,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            0,
+                            0
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "hg19 position",
-                        "x_start": 1,
-                        "x_end": 1,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            1,
+                            1
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "GGE N = 1,366",
-                        "x_start": 2,
-                        "x_end": 2,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            2,
+                            2
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "CTR N = 5,234",
-                        "x_start": 3,
-                        "x_end": 3,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            3,
+                            3
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Candidate Gene",
-                        "x_start": 4,
-                        "x_end": 4,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            4,
+                            4
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "P-value",
-                        "x_start": 5,
-                        "x_end": 5,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            5,
+                            5
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "OR, 95%-CI",
-                        "x_start": 6,
-                        "x_end": 6,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            6,
+                            6
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "1q21.1",
-                        "x_start": 7,
-                        "x_end": 7,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            7,
+                            7
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "chr1: 146.5–147.5",
-                        "x_start": 8,
-                        "x_end": 8,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            8,
+                            8
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "1",
-                        "x_start": 9,
-                        "x_end": 9,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            9,
+                            9
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "1",
-                        "x_start": 10,
-                        "x_end": 10,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            10,
+                            10
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "GJA8",
-                        "x_start": 11,
-                        "x_end": 11,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            11,
+                            11
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "0.37#",
-                        "x_start": 12,
-                        "x_end": 12,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            12,
+                            12
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "3.8; 0.05–300",
-                        "x_start": 13,
-                        "x_end": 13,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            13,
+                            13
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "15q11.2",
-                        "x_start": 14,
-                        "x_end": 14,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            14,
+                            14
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "chr15: 22.8–23.1",
-                        "x_start": 15,
-                        "x_end": 15,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            15,
+                            15
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "13",
-                        "x_start": 16,
-                        "x_end": 16,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            16,
+                            16
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "14",
-                        "x_start": 17,
-                        "x_end": 17,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            17,
+                            17
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "CYFIP1",
-                        "x_start": 18,
-                        "x_end": 18,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            18,
+                            18
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "4.18E-04*",
-                        "x_start": 19,
-                        "x_end": 19,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            19,
+                            19
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "3.5; 1.6–8.1",
-                        "x_start": 20,
-                        "x_end": 20,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            20,
+                            20
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "15q13.3",
-                        "x_start": 21,
-                        "x_end": 21,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            21,
+                            21
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "chr15: 31.3–32.5",
-                        "x_start": 22,
-                        "x_end": 22,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            22,
+                            22
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "11",
-                        "x_start": 23,
-                        "x_end": 23,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            23,
+                            23
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "0",
-                        "x_start": 24,
-                        "x_end": 24,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            24,
+                            24
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "CHRNA7",
-                        "x_start": 25,
-                        "x_end": 25,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            25,
+                            25
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "2.89E-08#",
-                        "x_start": 26,
-                        "x_end": 26,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            26,
+                            26
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "Inf; 9.7-Inf",
-                        "x_start": 27,
-                        "x_end": 27,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            27,
+                            27
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "16p13.11",
-                        "x_start": 28,
-                        "x_end": 28,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            28,
+                            28
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "chr16: 15.0–16.3",
-                        "x_start": 29,
-                        "x_end": 29,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            29,
+                            29
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "6",
-                        "x_start": 30,
-                        "x_end": 30,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            30,
+                            30
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "2",
-                        "x_start": 31,
-                        "x_end": 31,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            31,
+                            31
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "NDE1",
-                        "x_start": 32,
-                        "x_end": 32,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            32,
+                            32
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "1.48E-03#",
-                        "x_start": 33,
-                        "x_end": 33,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            33,
+                            33
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "11.5; 2.1–117",
-                        "x_start": 34,
-                        "x_end": 34,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            34,
+                            34
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "16p12",
-                        "x_start": 35,
-                        "x_end": 35,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            35,
+                            35
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "chr16:21.9–22.5",
-                        "x_start": 36,
-                        "x_end": 36,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            36,
+                            36
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "3",
-                        "x_start": 37,
-                        "x_end": 37,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            37,
+                            37
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "2",
-                        "x_start": 38,
-                        "x_end": 38,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            38,
+                            38
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 39,
-                        "x_end": 39,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            39,
+                            39
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "0.06#",
-                        "x_start": 40,
-                        "x_end": 40,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            40,
+                            40
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "5.8; 0.7–69",
-                        "x_start": 41,
-                        "x_end": 41,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            41,
+                            41
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "16p11.2",
-                        "x_start": 42,
-                        "x_end": 42,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            42,
+                            42
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "chr16: 29.6–30.2",
-                        "x_start": 43,
-                        "x_end": 43,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            43,
+                            43
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "1",
-                        "x_start": 44,
-                        "x_end": 44,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            44,
+                            44
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "1",
-                        "x_start": 45,
-                        "x_end": 45,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            45,
+                            45
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "PRRT2",
-                        "x_start": 46,
-                        "x_end": 46,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            46,
+                            46
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "0.37#",
-                        "x_start": 47,
-                        "x_end": 47,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            47,
+                            47
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "3.8; 0.05–300",
-                        "x_start": 48,
-                        "x_end": 48,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            48,
+                            48
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "22q11.2",
-                        "x_start": 49,
-                        "x_end": 49,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            49,
+                            49
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "chr22: 18.8–21.6",
-                        "x_start": 50,
-                        "x_end": 50,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            50,
+                            50
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "3",
-                        "x_start": 51,
-                        "x_end": 51,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            51,
+                            51
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "0",
-                        "x_start": 52,
-                        "x_end": 52,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            52,
+                            52
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "SNAP29",
-                        "x_start": 53,
-                        "x_end": 53,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            53,
+                            53
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "8.85E-03#",
-                        "x_start": 54,
-                        "x_end": 54,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            54,
+                            54
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "Inf; 1.6-Inf",
-                        "x_start": 55,
-                        "x_end": 55,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            55,
+                            55
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "Total",
-                        "x_start": 56,
-                        "x_end": 56,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            56,
+                            56
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": " ",
-                        "x_start": 57,
-                        "x_end": 57,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            57,
+                            57
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "38",
-                        "x_start": 58,
-                        "x_end": 58,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            58,
+                            58
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "20",
-                        "x_start": 59,
-                        "x_end": 59,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            59,
+                            59
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": " ",
-                        "x_start": 60,
-                        "x_end": 60,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            60,
+                            60
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "2.61E-17*",
-                        "x_start": 61,
-                        "x_end": 61,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            61,
+                            61
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "7.5; 4.20–13.3",
-                        "x_start": 62,
-                        "x_end": 62,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            62,
+                            62
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     }
                 ],
                 "id": "10.1371.journal.pgen.1005226.Table.1"
@@ -3899,1571 +4369,2467 @@
                 "cells": [
                     {
                         "content": "Sample-ID",
-                        "x_start": 0,
-                        "x_end": 0,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            0,
+                            0
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Syndrome",
-                        "x_start": 1,
-                        "x_end": 1,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            1,
+                            1
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Chr",
-                        "x_start": 2,
-                        "x_end": 2,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            2,
+                            2
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Start",
-                        "x_start": 3,
-                        "x_end": 3,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            3,
+                            3
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "End",
-                        "x_start": 4,
-                        "x_end": 4,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            4,
+                            4
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Candidate gene",
-                        "x_start": 5,
-                        "x_end": 5,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            5,
+                            5
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Disease/Trait",
-                        "x_start": 6,
-                        "x_end": 6,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            6,
+                            6
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "References",
-                        "x_start": 7,
-                        "x_end": 7,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            7,
+                            7
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "EC-CAE428",
-                        "x_start": 8,
-                        "x_end": 8,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            8,
+                            8
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "6/CAE,gsw",
-                        "x_start": 9,
-                        "x_end": 9,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            9,
+                            9
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "1",
-                        "x_start": 10,
-                        "x_end": 10,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            10,
+                            10
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "97005643",
-                        "x_start": 11,
-                        "x_end": 11,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            11,
+                            11
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "97712686",
-                        "x_start": 12,
-                        "x_end": 12,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            12,
+                            12
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "DPYD",
-                        "x_start": 13,
-                        "x_end": 13,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            13,
+                            13
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "SCZ,AUT",
-                        "x_start": 14,
-                        "x_end": 14,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            14,
+                            14
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "[32–34]",
-                        "x_start": 15,
-                        "x_end": 15,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            15,
+                            15
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "EC-EGTCS014",
-                        "x_start": 16,
-                        "x_end": 16,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            16,
+                            16
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "14/EGTCS,gsw",
-                        "x_start": 17,
-                        "x_end": 17,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            17,
+                            17
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "1",
-                        "x_start": 18,
-                        "x_end": 18,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            18,
+                            18
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "110606081",
-                        "x_start": 19,
-                        "x_end": 19,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            19,
+                            19
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "111393713",
-                        "x_start": 20,
-                        "x_end": 20,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            20,
+                            20
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "KCNA2,ALX3",
-                        "x_start": 21,
-                        "x_end": 21,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            21,
+                            21
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "EPI,ID",
-                        "x_start": 22,
-                        "x_end": 22,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            22,
+                            22
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "[35–39]",
-                        "x_start": 23,
-                        "x_end": 23,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            23,
+                            23
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "EC-CAE333#",
-                        "x_start": 24,
-                        "x_end": 24,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            24,
+                            24
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "5/CAE,gsw",
-                        "x_start": 25,
-                        "x_end": 25,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            25,
+                            25
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "2",
-                        "x_start": 26,
-                        "x_end": 26,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            26,
+                            26
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "50979977",
-                        "x_start": 27,
-                        "x_end": 27,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            27,
+                            27
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "51453231",
-                        "x_start": 28,
-                        "x_end": 28,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            28,
+                            28
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "NRXN1",
-                        "x_start": 29,
-                        "x_end": 29,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            29,
+                            29
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "GGE",
-                        "x_start": 30,
-                        "x_end": 30,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            30,
+                            30
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "[26,40,41]",
-                        "x_start": 31,
-                        "x_end": 31,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            31,
+                            31
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "EC-JAE085#",
-                        "x_start": 32,
-                        "x_end": 32,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            32,
+                            32
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "12/JAE,gsw",
-                        "x_start": 33,
-                        "x_end": 33,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            33,
+                            33
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "2",
-                        "x_start": 34,
-                        "x_end": 34,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            34,
+                            34
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "51080429",
-                        "x_start": 35,
-                        "x_end": 35,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            35,
+                            35
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "51682854",
-                        "x_start": 36,
-                        "x_end": 36,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            36,
+                            36
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "NRXN1",
-                        "x_start": 37,
-                        "x_end": 37,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            37,
+                            37
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "GGE",
-                        "x_start": 38,
-                        "x_end": 38,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            38,
+                            38
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "[26,40,41]",
-                        "x_start": 39,
-                        "x_end": 39,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            39,
+                            39
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "EC-JME399",
-                        "x_start": 40,
-                        "x_end": 40,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            40,
+                            40
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "13/JME,gsw",
-                        "x_start": 41,
-                        "x_end": 41,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            41,
+                            41
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "2",
-                        "x_start": 42,
-                        "x_end": 42,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            42,
+                            42
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "130275170",
-                        "x_start": 43,
-                        "x_end": 43,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            43,
+                            43
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "130762880",
-                        "x_start": 44,
-                        "x_end": 44,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            44,
+                            44
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "RAB6C",
-                        "x_start": 45,
-                        "x_end": 45,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            45,
+                            45
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 46,
-                        "x_end": 46,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            46,
+                            46
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 47,
-                        "x_end": 47,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            47,
+                            47
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "EC-JME104",
-                        "x_start": 48,
-                        "x_end": 48,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            48,
+                            48
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "13/JME,gsw",
-                        "x_start": 49,
-                        "x_end": 49,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            49,
+                            49
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "3",
-                        "x_start": 50,
-                        "x_end": 50,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            50,
+                            50
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "85017098",
-                        "x_start": 51,
-                        "x_end": 51,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            51,
+                            51
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "85603757",
-                        "x_start": 52,
-                        "x_end": 52,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            52,
+                            52
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "CADM2",
-                        "x_start": 53,
-                        "x_end": 53,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            53,
+                            53
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "ADHD",
-                        "x_start": 54,
-                        "x_end": 54,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            54,
+                            54
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "[42,43]",
-                        "x_start": 55,
-                        "x_end": 55,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            55,
+                            55
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "EC-CAE040",
-                        "x_start": 56,
-                        "x_end": 56,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            56,
+                            56
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "7/CAE,gsw",
-                        "x_start": 57,
-                        "x_end": 57,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            57,
+                            57
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "3",
-                        "x_start": 58,
-                        "x_end": 58,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            58,
+                            58
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "165317672",
-                        "x_start": 59,
-                        "x_end": 59,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            59,
+                            59
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "166886252",
-                        "x_start": 60,
-                        "x_end": 60,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            60,
+                            60
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "BCHE",
-                        "x_start": 61,
-                        "x_end": 61,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            61,
+                            61
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "ADHD,SCZ",
-                        "x_start": 62,
-                        "x_end": 62,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            62,
+                            62
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "[44]",
-                        "x_start": 63,
-                        "x_end": 63,
-                        "y_end": 7,
-                        "y_start": 7
+                        "x": [
+                            63,
+                            63
+                        ],
+                        "y": [
+                            7,
+                            7
+                        ]
                     },
                     {
                         "content": "EC-JME445",
-                        "x_start": 64,
-                        "x_end": 64,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            64,
+                            64
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "26/JME",
-                        "x_start": 65,
-                        "x_end": 65,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            65,
+                            65
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "4",
-                        "x_start": 66,
-                        "x_end": 66,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            66,
+                            66
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "27778687",
-                        "x_start": 67,
-                        "x_end": 67,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            67,
+                            67
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "31233363",
-                        "x_start": 68,
-                        "x_end": 68,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            68,
+                            68
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "PCDH7",
-                        "x_start": 69,
-                        "x_end": 69,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            69,
+                            69
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "GGE,EPI",
-                        "x_start": 70,
-                        "x_end": 70,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            70,
+                            70
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "[45–48]",
-                        "x_start": 71,
-                        "x_end": 71,
-                        "y_end": 8,
-                        "y_start": 8
+                        "x": [
+                            71,
+                            71
+                        ],
+                        "y": [
+                            8,
+                            8
+                        ]
                     },
                     {
                         "content": "EC-CAE099",
-                        "x_start": 72,
-                        "x_end": 72,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            72,
+                            72
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "6/CAE,gsw",
-                        "x_start": 73,
-                        "x_end": 73,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            73,
+                            73
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "5",
-                        "x_start": 74,
-                        "x_end": 74,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            74,
+                            74
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "275875",
-                        "x_start": 75,
-                        "x_end": 75,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            75,
+                            75
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "1257621",
-                        "x_start": 76,
-                        "x_end": 76,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            76,
+                            76
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "SLC6A19,TERT",
-                        "x_start": 77,
-                        "x_end": 77,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            77,
+                            77
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 78,
-                        "x_end": 78,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            78,
+                            78
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 79,
-                        "x_end": 79,
-                        "y_end": 9,
-                        "y_start": 9
+                        "x": [
+                            79,
+                            79
+                        ],
+                        "y": [
+                            9,
+                            9
+                        ]
                     },
                     {
                         "content": "EC-JME481",
-                        "x_start": 80,
-                        "x_end": 80,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            80,
+                            80
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "14/JME,gsw",
-                        "x_start": 81,
-                        "x_end": 81,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            81,
+                            81
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "5",
-                        "x_start": 82,
-                        "x_end": 82,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            82,
+                            82
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "28059042",
-                        "x_start": 83,
-                        "x_end": 83,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            83,
+                            83
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "31736582",
-                        "x_start": 84,
-                        "x_end": 84,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            84,
+                            84
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "DROSHA,CDH6",
-                        "x_start": 85,
-                        "x_end": 85,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            85,
+                            85
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "SCZ",
-                        "x_start": 86,
-                        "x_end": 86,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            86,
+                            86
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "[49–51]",
-                        "x_start": 87,
-                        "x_end": 87,
-                        "y_end": 10,
-                        "y_start": 10
+                        "x": [
+                            87,
+                            87
+                        ],
+                        "y": [
+                            10,
+                            10
+                        ]
                     },
                     {
                         "content": "EC-CAE347",
-                        "x_start": 88,
-                        "x_end": 88,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            88,
+                            88
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "9/CAE,gsw",
-                        "x_start": 89,
-                        "x_end": 89,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            89,
+                            89
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "6",
-                        "x_start": 90,
-                        "x_end": 90,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            90,
+                            90
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "144444363",
-                        "x_start": 91,
-                        "x_end": 91,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            91,
+                            91
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "146880409",
-                        "x_start": 92,
-                        "x_end": 92,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            92,
+                            92
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "EPM2A,GRM1",
-                        "x_start": 93,
-                        "x_end": 93,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            93,
+                            93
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "SCZ,EPI",
-                        "x_start": 94,
-                        "x_end": 94,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            94,
+                            94
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "[52,53]",
-                        "x_start": 95,
-                        "x_end": 95,
-                        "y_end": 11,
-                        "y_start": 11
+                        "x": [
+                            95,
+                            95
+                        ],
+                        "y": [
+                            11,
+                            11
+                        ]
                     },
                     {
                         "content": "EC-CAE204",
-                        "x_start": 96,
-                        "x_end": 96,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            96,
+                            96
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "8/CAE,gsw",
-                        "x_start": 97,
-                        "x_end": 97,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            97,
+                            97
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "6",
-                        "x_start": 98,
-                        "x_end": 98,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            98,
+                            98
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "162801345",
-                        "x_start": 99,
-                        "x_end": 99,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            99,
+                            99
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "163287279",
-                        "x_start": 100,
-                        "x_end": 100,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            100,
+                            100
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "PARK2",
-                        "x_start": 101,
-                        "x_end": 101,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            101,
+                            101
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 102,
-                        "x_end": 102,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            102,
+                            102
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "[54–58]",
-                        "x_start": 103,
-                        "x_end": 103,
-                        "y_end": 12,
-                        "y_start": 12
+                        "x": [
+                            103,
+                            103
+                        ],
+                        "y": [
+                            12,
+                            12
+                        ]
                     },
                     {
                         "content": "EC-JME461",
-                        "x_start": 104,
-                        "x_end": 104,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            104,
+                            104
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "4/CAE",
-                        "x_start": 105,
-                        "x_end": 105,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            105,
+                            105
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "7",
-                        "x_start": 106,
-                        "x_end": 106,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            106,
+                            106
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "124586130",
-                        "x_start": 107,
-                        "x_end": 107,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            107,
+                            107
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "126665734",
-                        "x_start": 108,
-                        "x_end": 108,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            108,
+                            108
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "GRM8",
-                        "x_start": 109,
-                        "x_end": 109,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            109,
+                            109
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "ASD,ADHD",
-                        "x_start": 110,
-                        "x_end": 110,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            110,
+                            110
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "[59–61]",
-                        "x_start": 111,
-                        "x_end": 111,
-                        "y_end": 13,
-                        "y_start": 13
+                        "x": [
+                            111,
+                            111
+                        ],
+                        "y": [
+                            13,
+                            13
+                        ]
                     },
                     {
                         "content": "EC-CAE158",
-                        "x_start": 112,
-                        "x_end": 112,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            112,
+                            112
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "8/CAE,gsw",
-                        "x_start": 113,
-                        "x_end": 113,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            113,
+                            113
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "7",
-                        "x_start": 114,
-                        "x_end": 114,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            114,
+                            114
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "143223069",
-                        "x_start": 115,
-                        "x_end": 115,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            115,
+                            115
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "143873940",
-                        "x_start": 116,
-                        "x_end": 116,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            116,
+                            116
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "FAM11C5,FAM115A",
-                        "x_start": 117,
-                        "x_end": 117,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            117,
+                            117
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 118,
-                        "x_end": 118,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            118,
+                            118
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 119,
-                        "x_end": 119,
-                        "y_end": 14,
-                        "y_start": 14
+                        "x": [
+                            119,
+                            119
+                        ],
+                        "y": [
+                            14,
+                            14
+                        ]
                     },
                     {
                         "content": "EC-EGTCS130",
-                        "x_start": 120,
-                        "x_end": 120,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            120,
+                            120
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "25/EGTCS,gsw",
-                        "x_start": 121,
-                        "x_end": 121,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            121,
+                            121
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "8",
-                        "x_start": 122,
-                        "x_end": 122,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            122,
+                            122
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "99979097",
-                        "x_start": 123,
-                        "x_end": 123,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            123,
+                            123
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "100538070",
-                        "x_start": 124,
-                        "x_end": 124,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            124,
+                            124
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "VPS13B",
-                        "x_start": 125,
-                        "x_end": 125,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            125,
+                            125
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 126,
-                        "x_end": 126,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            126,
+                            126
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 127,
-                        "x_end": 127,
-                        "y_end": 15,
-                        "y_start": 15
+                        "x": [
+                            127,
+                            127
+                        ],
+                        "y": [
+                            15,
+                            15
+                        ]
                     },
                     {
                         "content": "EC-JME417",
-                        "x_start": 128,
-                        "x_end": 128,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            128,
+                            128
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "17/JME,gsw",
-                        "x_start": 129,
-                        "x_end": 129,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            129,
+                            129
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "8",
-                        "x_start": 130,
-                        "x_end": 130,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            130,
+                            130
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "142563566",
-                        "x_start": 131,
-                        "x_end": 131,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            131,
+                            131
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "143798641",
-                        "x_start": 132,
-                        "x_end": 132,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            132,
+                            132
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "TSNARE1,BAI1,ARC",
-                        "x_start": 133,
-                        "x_end": 133,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            133,
+                            133
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "SCZ,BPD",
-                        "x_start": 134,
-                        "x_end": 134,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            134,
+                            134
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "[62]",
-                        "x_start": 135,
-                        "x_end": 135,
-                        "y_end": 16,
-                        "y_start": 16
+                        "x": [
+                            135,
+                            135
+                        ],
+                        "y": [
+                            16,
+                            16
+                        ]
                     },
                     {
                         "content": "EC-JAE119",
-                        "x_start": 136,
-                        "x_end": 136,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            136,
+                            136
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "16/JAE,gsw",
-                        "x_start": 137,
-                        "x_end": 137,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            137,
+                            137
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "8",
-                        "x_start": 138,
-                        "x_end": 138,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            138,
+                            138
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "142850077",
-                        "x_start": 139,
-                        "x_end": 139,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            139,
+                            139
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "143549806",
-                        "x_start": 140,
-                        "x_end": 140,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            140,
+                            140
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "TSNARE1,BAI1",
-                        "x_start": 141,
-                        "x_end": 141,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            141,
+                            141
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "SCZ,BPD",
-                        "x_start": 142,
-                        "x_end": 142,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            142,
+                            142
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "[62]",
-                        "x_start": 143,
-                        "x_end": 143,
-                        "y_end": 17,
-                        "y_start": 17
+                        "x": [
+                            143,
+                            143
+                        ],
+                        "y": [
+                            17,
+                            17
+                        ]
                     },
                     {
                         "content": "EC-CAE300",
-                        "x_start": 144,
-                        "x_end": 144,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            144,
+                            144
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "10/CAE",
-                        "x_start": 145,
-                        "x_end": 145,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            145,
+                            145
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "9",
-                        "x_start": 146,
-                        "x_end": 146,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            146,
+                            146
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "76601085",
-                        "x_start": 147,
-                        "x_end": 147,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            147,
+                            147
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "77182821",
-                        "x_start": 148,
-                        "x_end": 148,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            148,
+                            148
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "RORB",
-                        "x_start": 149,
-                        "x_end": 149,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            149,
+                            149
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "EPI,ID",
-                        "x_start": 150,
-                        "x_end": 150,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            150,
+                            150
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "[63–65]",
-                        "x_start": 151,
-                        "x_end": 151,
-                        "y_end": 18,
-                        "y_start": 18
+                        "x": [
+                            151,
+                            151
+                        ],
+                        "y": [
+                            18,
+                            18
+                        ]
                     },
                     {
                         "content": "EC-JME005",
-                        "x_start": 152,
-                        "x_end": 152,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            152,
+                            152
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "12/JME,gsw",
-                        "x_start": 153,
-                        "x_end": 153,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            153,
+                            153
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "10",
-                        "x_start": 154,
-                        "x_end": 154,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            154,
+                            154
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "27836576",
-                        "x_start": 155,
-                        "x_end": 155,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            155,
+                            155
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "28429513",
-                        "x_start": 156,
-                        "x_end": 156,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            156,
+                            156
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "MPP7,ARMC4,MKX",
-                        "x_start": 157,
-                        "x_end": 157,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            157,
+                            157
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "ID",
-                        "x_start": 158,
-                        "x_end": 158,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            158,
+                            158
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "[66]",
-                        "x_start": 159,
-                        "x_end": 159,
-                        "y_end": 19,
-                        "y_start": 19
+                        "x": [
+                            159,
+                            159
+                        ],
+                        "y": [
+                            19,
+                            19
+                        ]
                     },
                     {
                         "content": "EC-JME054",
-                        "x_start": 160,
-                        "x_end": 160,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            160,
+                            160
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "20/JME,gsw",
-                        "x_start": 161,
-                        "x_end": 161,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            161,
+                            161
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "11",
-                        "x_start": 162,
-                        "x_end": 162,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            162,
+                            162
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "4167416",
-                        "x_start": 163,
-                        "x_end": 163,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            163,
+                            163
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "5262622",
-                        "x_start": 164,
-                        "x_end": 164,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            164,
+                            164
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "C11orf40,TRIM68",
-                        "x_start": 165,
-                        "x_end": 165,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            165,
+                            165
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 166,
-                        "x_end": 166,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            166,
+                            166
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 167,
-                        "x_end": 167,
-                        "y_end": 20,
-                        "y_start": 20
+                        "x": [
+                            167,
+                            167
+                        ],
+                        "y": [
+                            20,
+                            20
+                        ]
                     },
                     {
                         "content": "EC-JME425",
-                        "x_start": 168,
-                        "x_end": 168,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            168,
+                            168
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "13/JME",
-                        "x_start": 169,
-                        "x_end": 169,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            169,
+                            169
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "12",
-                        "x_start": 170,
-                        "x_end": 170,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            170,
+                            170
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "72135173",
-                        "x_start": 171,
-                        "x_end": 171,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            171,
+                            171
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "73995884",
-                        "x_start": 172,
-                        "x_end": 172,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            172,
+                            172
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "TBC1D15,TPH2",
-                        "x_start": 173,
-                        "x_end": 173,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            173,
+                            173
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "ADHD",
-                        "x_start": 174,
-                        "x_end": 174,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            174,
+                            174
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "[67–69]",
-                        "x_start": 175,
-                        "x_end": 175,
-                        "y_end": 21,
-                        "y_start": 21
+                        "x": [
+                            175,
+                            175
+                        ],
+                        "y": [
+                            21,
+                            21
+                        ]
                     },
                     {
                         "content": "EC-JME642",
-                        "x_start": 176,
-                        "x_end": 176,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            176,
+                            176
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "15JME,gsw",
-                        "x_start": 177,
-                        "x_end": 177,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            177,
+                            177
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "15",
-                        "x_start": 178,
-                        "x_end": 178,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            178,
+                            178
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "84915113",
-                        "x_start": 179,
-                        "x_end": 179,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            179,
+                            179
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "85726714",
-                        "x_start": 180,
-                        "x_end": 180,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            180,
+                            180
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "WDR73,PDE8A",
-                        "x_start": 181,
-                        "x_end": 181,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            181,
+                            181
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "MCP",
-                        "x_start": 182,
-                        "x_end": 182,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            182,
+                            182
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "[70]",
-                        "x_start": 183,
-                        "x_end": 183,
-                        "y_end": 22,
-                        "y_start": 22
+                        "x": [
+                            183,
+                            183
+                        ],
+                        "y": [
+                            22,
+                            22
+                        ]
                     },
                     {
                         "content": "EC-CAE286*",
-                        "x_start": 184,
-                        "x_end": 184,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            184,
+                            184
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "3/CAE,gsw",
-                        "x_start": 185,
-                        "x_end": 185,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            185,
+                            185
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "16",
-                        "x_start": 186,
-                        "x_end": 186,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            186,
+                            186
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "5615773",
-                        "x_start": 187,
-                        "x_end": 187,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            187,
+                            187
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "6512138",
-                        "x_start": 188,
-                        "x_end": 188,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            188,
+                            188
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "RBFOX1",
-                        "x_start": 189,
-                        "x_end": 189,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            189,
+                            189
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "ASD,SCZ,EPI",
-                        "x_start": 190,
-                        "x_end": 190,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            190,
+                            190
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "[27,71–73]",
-                        "x_start": 191,
-                        "x_end": 191,
-                        "y_end": 23,
-                        "y_start": 23
+                        "x": [
+                            191,
+                            191
+                        ],
+                        "y": [
+                            23,
+                            23
+                        ]
                     },
                     {
                         "content": "EC-CAE226",
-                        "x_start": 192,
-                        "x_end": 192,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            192,
+                            192
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "6/CAE,gsw",
-                        "x_start": 193,
-                        "x_end": 193,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            193,
+                            193
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "18",
-                        "x_start": 194,
-                        "x_end": 194,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            194,
+                            194
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "13982898",
-                        "x_start": 195,
-                        "x_end": 195,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            195,
+                            195
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "14969710",
-                        "x_start": 196,
-                        "x_end": 196,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            196,
+                            196
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "ZNF519",
-                        "x_start": 197,
-                        "x_end": 197,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            197,
+                            197
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 198,
-                        "x_end": 198,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            198,
+                            198
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 199,
-                        "x_end": 199,
-                        "y_end": 24,
-                        "y_start": 24
+                        "x": [
+                            199,
+                            199
+                        ],
+                        "y": [
+                            24,
+                            24
+                        ]
                     },
                     {
                         "content": "EC-CAE161",
-                        "x_start": 200,
-                        "x_end": 200,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            200,
+                            200
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "7/CAE,gsw",
-                        "x_start": 201,
-                        "x_end": 201,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            201,
+                            201
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "20",
-                        "x_start": 202,
-                        "x_end": 202,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            202,
+                            202
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "8099277",
-                        "x_start": 203,
-                        "x_end": 203,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            203,
+                            203
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "8572225",
-                        "x_start": 204,
-                        "x_end": 204,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            204,
+                            204
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "PLCB1",
-                        "x_start": 205,
-                        "x_end": 205,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            205,
+                            205
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "EE,EPI,SCZ",
-                        "x_start": 206,
-                        "x_end": 206,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            206,
+                            206
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "[54,74–77]",
-                        "x_start": 207,
-                        "x_end": 207,
-                        "y_end": 25,
-                        "y_start": 25
+                        "x": [
+                            207,
+                            207
+                        ],
+                        "y": [
+                            25,
+                            25
+                        ]
                     },
                     {
                         "content": "EC-EGTCS119",
-                        "x_start": 208,
-                        "x_end": 208,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            208,
+                            208
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "15/EGTCS,gsw",
-                        "x_start": 209,
-                        "x_end": 209,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            209,
+                            209
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "20",
-                        "x_start": 210,
-                        "x_end": 210,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            210,
+                            210
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "14902412",
-                        "x_start": 211,
-                        "x_end": 211,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            211,
+                            211
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "15312347",
-                        "x_start": 212,
-                        "x_end": 212,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            212,
+                            212
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "MACROD2",
-                        "x_start": 213,
-                        "x_end": 213,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            213,
+                            213
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "AUT,ADHD",
-                        "x_start": 214,
-                        "x_end": 214,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            214,
+                            214
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "[78–82]",
-                        "x_start": 215,
-                        "x_end": 215,
-                        "y_end": 26,
-                        "y_start": 26
+                        "x": [
+                            215,
+                            215
+                        ],
+                        "y": [
+                            26,
+                            26
+                        ]
                     },
                     {
                         "content": "EC-JME101",
-                        "x_start": 216,
-                        "x_end": 216,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            216,
+                            216
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "24/JME",
-                        "x_start": 217,
-                        "x_end": 217,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            217,
+                            217
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "21",
-                        "x_start": 218,
-                        "x_end": 218,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            218,
+                            218
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "45866974",
-                        "x_start": 219,
-                        "x_end": 219,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            219,
+                            219
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "48096945",
-                        "x_start": 220,
-                        "x_end": 220,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            220,
+                            220
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "ADARB1,S100B",
-                        "x_start": 221,
-                        "x_end": 221,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            221,
+                            221
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 222,
-                        "x_end": 222,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            222,
+                            222
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     },
                     {
                         "content": "[83,84]",
-                        "x_start": 223,
-                        "x_end": 223,
-                        "y_end": 27,
-                        "y_start": 27
+                        "x": [
+                            223,
+                            223
+                        ],
+                        "y": [
+                            27,
+                            27
+                        ]
                     }
                 ],
                 "id": "10.1371.journal.pgen.1005226.Table.1"
@@ -5472,150 +6838,234 @@
                 "cells": [
                     {
                         "content": "Gene-set library",
-                        "x_start": 0,
-                        "x_end": 0,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            0,
+                            0
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Padj-value",
-                        "x_start": 1,
-                        "x_end": 1,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            1,
+                            1
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "Genes",
-                        "x_start": 2,
-                        "x_end": 2,
-                        "y_end": 0,
-                        "y_start": 0
+                        "x": [
+                            2,
+                            2
+                        ],
+                        "y": [
+                            0,
+                            0
+                        ]
                     },
                     {
                         "content": "MGI Mammalian Phenotype",
-                        "x_start": 3,
-                        "x_end": 3,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            3,
+                            3
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 4,
-                        "x_end": 4,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            4,
+                            4
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 5,
-                        "x_end": 5,
-                        "y_end": 1,
-                        "y_start": 1
+                        "x": [
+                            5,
+                            5
+                        ],
+                        "y": [
+                            1,
+                            1
+                        ]
                     },
                     {
                         "content": "abnormal emotion/affect behaviour (MP:0002572)",
-                        "x_start": 6,
-                        "x_end": 6,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            6,
+                            6
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "1.30E-03",
-                        "x_start": 7,
-                        "x_end": 7,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            7,
+                            7
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "ARC NTAN1 RORB PARK2 GRM1 GRM8 APBA2 CHRNA7 CHL1 TPH2 COMT/ZDHHC/RTN4R",
-                        "x_start": 8,
-                        "x_end": 8,
-                        "y_end": 2,
-                        "y_start": 2
+                        "x": [
+                            8,
+                            8
+                        ],
+                        "y": [
+                            2,
+                            2
+                        ]
                     },
                     {
                         "content": "GO biological process",
-                        "x_start": 9,
-                        "x_end": 9,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            9,
+                            9
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 10,
-                        "x_end": 10,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            10,
+                            10
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 11,
-                        "x_end": 11,
-                        "y_end": 3,
-                        "y_start": 3
+                        "x": [
+                            11,
+                            11
+                        ],
+                        "y": [
+                            3,
+                            3
+                        ]
                     },
                     {
                         "content": "cognition (GO:0050890)",
-                        "x_start": 12,
-                        "x_end": 12,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            12,
+                            12
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "0.012",
-                        "x_start": 13,
-                        "x_end": 13,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            13,
+                            13
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "ARC OR52B4 EPM2A NTAN1 PARK2 NRXN1 S100B BCHE CYFIP1 CHRNA7 PLCB1 CHL1 DGCR2/COMT",
-                        "x_start": 14,
-                        "x_end": 14,
-                        "y_end": 4,
-                        "y_start": 4
+                        "x": [
+                            14,
+                            14
+                        ],
+                        "y": [
+                            4,
+                            4
+                        ]
                     },
                     {
                         "content": "PPI Hub Proteins",
-                        "x_start": 15,
-                        "x_end": 15,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            15,
+                            15
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 16,
-                        "x_end": 16,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            16,
+                            16
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "",
-                        "x_start": 17,
-                        "x_end": 17,
-                        "y_end": 5,
-                        "y_start": 5
+                        "x": [
+                            17,
+                            17
+                        ],
+                        "y": [
+                            5,
+                            5
+                        ]
                     },
                     {
                         "content": "GRIN2B",
-                        "x_start": 18,
-                        "x_end": 18,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            18,
+                            18
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "0.018",
-                        "x_start": 19,
-                        "x_end": 19,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            19,
+                            19
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     },
                     {
                         "content": "ARC TJP1 MAPK3 MYH11 EXOC3 NRXN1 PARK2 PLCB1 GRM1",
-                        "x_start": 20,
-                        "x_end": 20,
-                        "y_end": 6,
-                        "y_start": 6
+                        "x": [
+                            20,
+                            20
+                        ],
+                        "y": [
+                            6,
+                            6
+                        ]
                     }
                 ],
                 "id": "10.1371.journal.pgen.1005226.Table.1"
