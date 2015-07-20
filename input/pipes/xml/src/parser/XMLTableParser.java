@@ -1,5 +1,6 @@
 package parser;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import javax.xml.stream.XMLInputFactory;
@@ -18,6 +19,7 @@ public class XMLTableParser {
   private InputStream xmlStream;
   private XMLInputFactory factory;
   private XMLStreamReader parser;
+  private String fileName;
 
   /**
    * Extract a flat element.  See dd-genomics/parser for more complex version.
@@ -65,7 +67,6 @@ public class XMLTableParser {
             if (parser.getLocalName().equals("table")) { break loop; }
             break;
 
-          // TODO: ADD row/colspan!!! & TEST by adding an assert on tablegrid completeness...
           case XMLStreamConstants.START_ELEMENT:
             localName = parser.getLocalName();
             if (localName.equals("tr")) {
@@ -77,6 +78,9 @@ public class XMLTableParser {
             break;
         }
       }
+
+      // assert basic coherence here
+      assert tableGrid.isCoherent() : "Coherence error: Table " + tableId + " from file '" + fileName + "'";
       return tableGrid;
     } catch (XMLStreamException ex) {
       System.out.println(ex);
@@ -161,8 +165,9 @@ public class XMLTableParser {
   private String cleanup(String x) { return x; }
 
   // Default constructor from InputStream
-  public XMLTableParser(InputStream xmlStream) {
+  public XMLTableParser(InputStream xmlStream, File file) {
     this.xmlStream = xmlStream;
     this.factory = XMLInputFactory.newInstance();
+    this.fileName = file.getName();
   }
 }
