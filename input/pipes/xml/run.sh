@@ -4,4 +4,4 @@ if [ "$#" -ne 2 ]; then
   exit
 fi
 echo "Parsing $1, saving to $2"
-java -ea -jar parser.jar $1 > $2
+time java -ea -jar parser.jar $1 > $2

@@ -39,12 +39,14 @@ public class TableGrid {
       JSONObject cell = new JSONObject();
 
       // Content
-      cell.put("content", cellContents.get(i));
+      cell.put("c", cellContents.get(i));
 
       // Attributes
-      JSONArray attrs = new JSONArray();
-      for (String attr : cellAttributes.get(i)) { attrs.add(attr); }
-      cell.put("attributes", attrs);
+      if (cellAttributes.get(i).size() > 0) {
+        JSONArray attrs = new JSONArray();
+        for (String attr : cellAttributes.get(i)) { attrs.add(attr); }
+        cell.put("attrs", attrs);
+      }
 
       // Coordinates- compressed format
       int[] coords = cellCoordinates.get(i);

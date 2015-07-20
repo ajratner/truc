@@ -67,10 +67,10 @@ public class XMLTableParser {
   private TableGrid parseTable(String tableId) {
     int x = -1;
     int y = -1;
-    int xEnd, yEnd;
-    TableGrid tableGrid = new TableGrid(tableId);
+    int xEnd, yEnd, colspan, rowspan;
     String localName;
     HashSet<String> rowSpanPushed = new HashSet<String>();
+    TableGrid tableGrid = new TableGrid(tableId);
     try {
       loop: for (int e=parser.next(); e != XMLStreamConstants.END_DOCUMENT; e = parser.next()) {
         switch (e) {
@@ -96,8 +96,16 @@ public class XMLTableParser {
 
               // Handle colspan, rowspan
               HashMap<String, String> cellAttrs = getElementAttributesMap();
-              int colspan = Integer.parseInt(cellAttrs.getOrDefault("colspan", "1"));
-              int rowspan = Integer.parseInt(cellAttrs.getOrDefault("rowspan", "1"));
+              try {
+                colspan = Integer.parseInt(cellAttrs.getOrDefault("colspan", "1"));
+              } catch (NumberFormatException ex) {
+                colspan = 1;
+              }
+              try {
+                rowspan = Integer.parseInt(cellAttrs.getOrDefault("rowspan", "1"));
+              } catch (NumberFormatException ex) {
+                rowspan = 1;
+              }
               xEnd = x + colspan - 1;
               yEnd = y + rowspan - 1;
 
