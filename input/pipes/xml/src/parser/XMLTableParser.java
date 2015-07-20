@@ -69,6 +69,7 @@ public class XMLTableParser {
           case XMLStreamConstants.START_ELEMENT:
             localName = parser.getLocalName();
             if (localName.equals("tr")) {
+              x = 0;
               y += 1;
             } else if (localName.equals("td") || localName.equals("th")) {
               x += 1;
