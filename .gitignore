@@ -1,0 +1,44 @@
+# data
+*.json
+
+# LaTex stuff
+*.aux
+*.bib
+*.bbl
+*.blg
+*.log
+
+# Java stuff
+*/bin/
+*/build/
+*.jar
+
+# Vim swap files
+*.*.sw*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Mac OSX
+*.DS_Store

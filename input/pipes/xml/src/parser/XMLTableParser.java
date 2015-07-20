@@ -1,5 +1,6 @@
 package parser;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import javax.xml.stream.XMLInputFactory;
@@ -8,6 +9,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -18,6 +20,16 @@ public class XMLTableParser {
   private InputStream xmlStream;
   private XMLInputFactory factory;
   private XMLStreamReader parser;
+  private String fileName;
+
+  private HashMap getElementAttributesMap() {
+    HashMap<String, String> attrs = new HashMap<String, String>(); 
+    for (int i=0; i < parser.getAttributeCount(); i++) {
+      attrs.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
+      //System.out.println(parser.getAttributeLocalName(i) + " : " + parser.getAttributeValue(i));
+    }
+    return attrs;
+  }
 
   /**
    * Extract a flat element.  See dd-genomics/parser for more complex version.
@@ -55,6 +67,7 @@ public class XMLTableParser {
   private TableGrid parseTable(String tableId) {
     int x = -1;
     int y = -1;
+    int xEnd, yEnd;
     TableGrid tableGrid = new TableGrid(tableId);
     String localName;
     try {
@@ -65,7 +78,6 @@ public class XMLTableParser {
             if (parser.getLocalName().equals("table")) { break loop; }
             break;
 
-          // TODO: ADD row/colspan!!! & TEST by adding an assert on tablegrid completeness...
           case XMLStreamConstants.START_ELEMENT:
             localName = parser.getLocalName();
             if (localName.equals("tr")) {
@@ -73,11 +85,25 @@ public class XMLTableParser {
               y += 1;
             } else if (localName.equals("td") || localName.equals("th")) {
               x += 1;
-              tableGrid.addCell(getFlatElementText(localName), x, y);
+
+              // Handle some common cell attributes
+              ArrayList<String> attrs = new ArrayList<String>();
+              if (localName.equals("th")) { attrs.add("th"); }
+
+              // Handle colspan, rowspan
+              HashMap<String, String> cellAttrs = getElementAttributesMap();
+              xEnd = cellAttrs.containsKey("colspan") ? x + Integer.parseInt(cellAttrs.get("colspan")) - 1 : x;
+              yEnd = cellAttrs.containsKey("rowspan") ? y + Integer.parseInt(cellAttrs.get("rowspan")) - 1 : y;
+
+              tableGrid.addCell(getFlatElementText(localName), attrs, x, xEnd, y, yEnd);
+              x = xEnd;
             } 
             break;
         }
       }
+
+      // assert basic coherence here
+      assert tableGrid.isCoherent() : "Coherence error: Table " + tableId + " from file '" + fileName + "'";
       return tableGrid;
     } catch (XMLStreamException ex) {
       System.out.println(ex);
@@ -162,8 +188,9 @@ public class XMLTableParser {
   private String cleanup(String x) { return x; }
 
   // Default constructor from InputStream
-  public XMLTableParser(InputStream xmlStream) {
+  public XMLTableParser(InputStream xmlStream, File file) {
     this.xmlStream = xmlStream;
     this.factory = XMLInputFactory.newInstance();
+    this.fileName = file.getName();
   }
 }

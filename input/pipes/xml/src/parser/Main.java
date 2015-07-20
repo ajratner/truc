@@ -23,7 +23,7 @@ public class Main {
     try {
       for (File file : files) {
         InputStream xmlInput = new FileInputStream(file);
-        XMLTableParser parser = new XMLTableParser(xmlInput);
+        XMLTableParser parser = new XMLTableParser(xmlInput, file);
         for (TableGrid tableGrid : parser.parse()) {
           System.out.println(tableGrid.toJSONString());
         }
