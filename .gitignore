@@ -1,5 +1,6 @@
 # data
 *.json
+*.processed
 
 # LaTex stuff
 *.aux
