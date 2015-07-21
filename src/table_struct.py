@@ -25,10 +25,14 @@ class TableGrid:
     return "<TableGrid for %s: %s cells>" % (self.id, len(self.cells))
 
 
-def load_table_grids(filepath):
+def load_table_grids(filepath, max_n=None, offset=None):
   """Load a list of TableGrid objects from file w/ one JSON object per line"""
   tables = []
   with open(filepath, 'rb') as f:
-    for line in f:
+    for i,line in enumerate(f):
+      if offset is not None and i < offset:
+        continue
+      if max_n is not None and i > max_n:
+        break
       tables.append(TableGrid(json.loads(line.strip())))
   return tables
