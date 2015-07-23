@@ -21,6 +21,8 @@ public class XMLTableParser {
   private XMLInputFactory factory;
   private XMLStreamReader parser;
   private String fileName;
+  private HashSet<String> seenNames;
+  private ArrayList<TableGrid> tableGrids;
 
   private HashMap getElementAttributesMap() {
     HashMap<String, String> attrs = new HashMap<String, String>(); 
@@ -64,7 +66,15 @@ public class XMLTableParser {
   /**
    * Parse an XML table into a TableGrid object.
    **/
-  private TableGrid parseTable(String tableId) {
+  private TableGrid parseTable(String docId) {
+
+    // Get tableId from docId
+    assert docId != null;
+    String tableId = docId + "." + "Table";
+    if (seenNames.contains(tableId)) { tableId = iterateName(tableId); }
+    seenNames.add(tableId);
+
+    // parse table
     int x = -1;
     int y = -1;
     int xEnd, yEnd, colspan, rowspan;
@@ -134,12 +144,47 @@ public class XMLTableParser {
   }
 
   /**
+   * Parse a table-wrapper (and the table within it).
+   **/
+  private void parseTableWrap(String docId) {
+    TableGrid tableGrid = null;
+    String before = null;
+    String after = null;
+    String localName;
+    try {
+      loop: for (int e=parser.next(); e != XMLStreamConstants.END_DOCUMENT; e = parser.next()) {
+        switch (e) {
+          case XMLStreamConstants.END_ELEMENT:
+            localName = parser.getLocalName();
+            if (parser.getLocalName().equals("table-wrap")) { break loop; }
+            break;
+
+          case XMLStreamConstants.START_ELEMENT:
+            localName = parser.getLocalName();
+            if (localName.equals("caption")) {
+              before = getFlatElementText("caption"); 
+            } else if (localName.equals("table-wrap-foot")) {
+              after = getFlatElementText("table-wrap-foot");
+            } else if (localName.equals("table")) {
+              tableGrid = parseTable(docId);
+            }
+            break;
+        }
+      }
+    } catch (XMLStreamException ex) {
+      System.out.println(ex);
+    }
+    if (tableGrid != null) { 
+      tableGrid.addWrapper(before, after);
+      tableGrids.add(tableGrid); 
+    }
+  }
+
+  /**
    * Go through the XML document, pulling out tables as TableGrid objects.
    */
   public ArrayList<TableGrid> parse() {
-    HashSet<String> seenNames = new HashSet<String>();
     String docId = null;
-    ArrayList<TableGrid> tableGrids = new ArrayList<TableGrid>();
     try {
       parser = factory.createXMLStreamReader(this.xmlStream);
       while (true) {
@@ -151,13 +196,13 @@ public class XMLTableParser {
           if (docId == null && isDocIdSection(parser)) {
             docId = formatDocId(getFlatElementText(localName));
 
+          // if possible look for a table-wrap element (PLoS, PMC?)
+          } else if (localName.equals("table-wrap")) { 
+            parseTableWrap(docId);
+
           // get tables
           } else if (localName.equals("table")) {
-            assert docId != null;
-            String tableId = docId + "." + "Table";
-            if (seenNames.contains(tableId)) { tableId = iterateName(tableId); }
-            seenNames.add(tableId);
-            tableGrids.add(parseTable(tableId));
+            tableGrids.add(parseTable(docId));
           }
         } else if (event == XMLStreamConstants.END_DOCUMENT) {
           parser.close();
@@ -214,5 +259,7 @@ public class XMLTableParser {
     this.xmlStream = xmlStream;
     this.factory = XMLInputFactory.newInstance();
     this.fileName = file.getName();
+    this.seenNames = new HashSet<String>();
+    this.tableGrids = new ArrayList<TableGrid>();
   }
 }
