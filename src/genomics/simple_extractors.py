@@ -20,7 +20,13 @@ def load_g_dict():
 def tag_g(s, genes):
   """Simple function to tag canonical gene mentions- also returns whether any found"""
   toks = re.split(r'\s+', s)
-  toks_out = ['<%s entity="%s">%s</%s>' % (GENE_TAG_START, '|'.join(list(genes[tok])), tok, GENE_TAG_END) if tok in genes else tok for tok in toks]
+  toks_out = []
+  for tok in toks:
+    new_tok = tok
+    if len(tok) > 3 and tok in genes:
+      entities = '|'.join(list(genes[tok]))
+      new_tok = '<%s entity="%s">%s</%s>' % (GENE_TAG_START, entities, tok, GENE_TAG_END)
+    toks_out.append(new_tok)
   return ' '.join(toks_out), not (toks == toks_out)
 
 
