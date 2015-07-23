@@ -48,10 +48,6 @@ public class TableGrid {
       // Content
       cell.put("c", cellContents.get(i));
 
-      // Wrapper
-      if (before != null) { cell.put("bef", before); }
-      if (after != null) { cell.put("aft", after); }
-
       // Attributes
       if (cellAttributes.get(i).size() > 0) {
         JSONArray attrs = new JSONArray();
@@ -80,6 +76,10 @@ public class TableGrid {
       cells.add(cell);
     }
     tableGrid.put("cells", cells);
+
+    // Wrapper
+    if (before != null) { tableGrid.put("bef", before); }
+    if (after != null) { tableGrid.put("aft", after); }
     return tableGrid;
   }
 
