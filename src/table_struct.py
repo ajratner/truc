@@ -7,8 +7,6 @@ class TableCell:
     self.attributes = obj.get('attrs', [])
     self.x = [int(x) for x in obj['x']] if type(obj['x']) is list else [int(obj['x'])]*2
     self.y = [int(y) for y in obj['y']] if type(obj['y']) is list else [int(obj['y'])]*2
-    self.before = obj.get('bef', '')
-    self.after = obj.get('aft', '')
 
   def to_json_dict(self):
     obj = {'c':self.content}
@@ -16,10 +14,6 @@ class TableCell:
       obj['attrs'] = self.attributes
     obj['x'] = self.x[0] if self.x[0] == self.x[1] else self.x
     obj['y'] = self.y[0] if self.y[0] == self.y[1] else self.y
-    if len(self.before) > 0:
-      obj['bef'] = self.before
-    if len(self.after) > 0:
-      obj['aft'] = self.after
     return obj
 
   def __repr__(self):
@@ -31,12 +25,21 @@ class TableGrid:
     """Initialized from JSON object / dict in tableGrid format"""
     self.id = obj['id']
     self.cells = [TableCell(cell) for cell in obj['cells']]
+    self.before = obj.get('bef', '').encode('utf8')
+    self.after = obj.get('aft', '').encode('utf8')
 
   def to_json_dict(self):
-    return {"id":self.id, "cells":[cell.to_json_dict() for cell in self.cells]}
+    obj = {"id":self.id, "cells":[cell.to_json_dict() for cell in self.cells]}
+    if len(self.before) > 0:
+      obj['bef'] = self.before
+    if len(self.after) > 0:
+      obj['aft'] = self.after
+    return obj
 
   def to_dict(self):
-    return {"id":self.id, "cells":[cell.__dict__ for cell in self.cells]}
+    obj = self.__dict__
+    obj['cells'] = [cell.__dict__ for cell in self.cells]
+    return obj
 
   def __repr__(self):
     return "<TableGrid for %s: %s cells>" % (self.id, len(self.cells))
