@@ -6,6 +6,8 @@ import org.json.simple.JSONObject;
 
 public class TableGrid {
   private String id;
+  private String before;
+  private String after;
   private ArrayList<String> cellContents;
   private ArrayList<int[]> cellCoordinates;
   private ArrayList<ArrayList<String>> cellAttributes;
@@ -24,6 +26,11 @@ public class TableGrid {
     addCell(content, attrs, xs, xs, ys, ys);
   }
 
+  public void addWrapper(String before, String after) {
+    this.before = before;
+    this.after = after;
+  }
+
   /**
    * Check to see if table has been captured correctly.  Anything actually worth putting here?
    **/
@@ -40,6 +47,10 @@ public class TableGrid {
 
       // Content
       cell.put("c", cellContents.get(i));
+
+      // Wrapper
+      if (before != null) { cell.put("bef", before); }
+      if (after != null) { cell.put("aft", after); }
 
       // Attributes
       if (cellAttributes.get(i).size() > 0) {

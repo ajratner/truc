@@ -7,6 +7,8 @@ class TableCell:
     self.attributes = obj.get('attrs', [])
     self.x = [int(x) for x in obj['x']] if type(obj['x']) is list else [int(obj['x'])]*2
     self.y = [int(y) for y in obj['y']] if type(obj['y']) is list else [int(obj['y'])]*2
+    self.before = obj.get('bef', '')
+    self.after = obj.get('aft', '')
 
   def to_json_dict(self):
     obj = {'c':self.content}
@@ -14,6 +16,10 @@ class TableCell:
       obj['attrs'] = self.attributes
     obj['x'] = self.x[0] if self.x[0] == self.x[1] else self.x
     obj['y'] = self.y[0] if self.y[0] == self.y[1] else self.y
+    if len(self.before) > 0:
+      obj['bef'] = self.before
+    if len(self.after) > 0:
+      obj['aft'] = self.after
     return obj
 
   def __repr__(self):
