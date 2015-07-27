@@ -17,13 +17,13 @@ mkdir -p ${OUTPUT_FILE}.split
 rm -f ${OUTPUT_FILE}.split/*
 
 echo "[MAP] Splitting input file..."
-split -a 10 -l ${BATCH_SIZE} ${INPUT_FILE} ${OUTPUT_FILE}.split/input-
+time split -a 10 -l ${BATCH_SIZE} ${INPUT_FILE} ${OUTPUT_FILE}.split/input-
 
 echo "[EXECUTE] Executing run.sh in parallel..."
-find ${OUTPUT_FILE}.split -name "input-*" 2>/dev/null -print0 | xargs -0 -P $PARALLELISM -L 1 ./run.sh ${SCRIPT}
+time find ${OUTPUT_FILE}.split -name "input-*" 2>/dev/null -print0 | xargs -0 -P $PARALLELISM -L 1 ./run.sh ${SCRIPT}
 
 echo "[REDUCE] Concatenating to output file..."
-cat ${OUTPUT_FILE}.split/*.processed > ${OUTPUT_FILE}
+time cat ${OUTPUT_FILE}.split/*.processed > ${OUTPUT_FILE}
 
 echo "[CLEANUP] Removing intermediate files..."
 rm -rf ${OUTPUT_FILE}.split/
