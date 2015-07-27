@@ -7,4 +7,5 @@ To run the beaker notebooks in this directory:
 
 Some notes on getting beaker to run:
 * To run from linux server e.g. raiders2: `./beaker.command --public-server`
+* **Currently only works on Firefox ([see issue](https://github.com/twosigma/beaker-notebook/issues/1963))**
 * Specifying language binaries locations: edit `~/.beaker/v1/config/beaker.pref.json` while beaker not running ([see docs](https://github.com/twosigma/beaker-notebook/wiki/Language-Preferences))
