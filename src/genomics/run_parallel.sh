@@ -4,8 +4,8 @@ set -eu
 if [ "$#" -le 4 ]; then
   echo "Usage: $0 [python_script] [input_file] [parallelism] [batch_size] [output_file]"
   echo "Where [python_script] should satisfy the following spec:"
-  echo " INPUT: a filepath f"
-  echo " OUTPUT: a file f.processed"
+  echo " INPUT: lines into sys.stdin"
+  echo " OUTPUT: lines printed out"
   exit
 fi
 SCRIPT=$1
