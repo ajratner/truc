@@ -21,7 +21,7 @@ public class XMLTableParser {
   private XMLInputFactory factory;
   private XMLStreamReader parser;
   private String fileName;
-  private HashSet<String> seenNames;
+  private HashMap<String, Integer> seenNames;
   private ArrayList<TableGrid> tableGrids;
 
   private HashMap getElementAttributesMap() {
@@ -70,9 +70,15 @@ public class XMLTableParser {
 
     // Get tableId from docId
     assert docId != null;
+    int tableNum;
     String tableId = docId + "." + "Table";
-    if (seenNames.contains(tableId)) { tableId = iterateName(tableId); }
-    seenNames.add(tableId);
+    if (seenNames.containsKey(tableId)) {
+      tableNum = seenNames.get(tableId) + 1;
+    } else {
+      tableNum = 0;
+    }
+    seenNames.put(tableId, tableNum);
+    tableId = tableId + "." + tableNum;
 
     // parse table
     int x = -1;
@@ -225,18 +231,8 @@ public class XMLTableParser {
     }
     return false;
   }
-  public String formatDocId(String docIdText) { return docIdText.replace("/", "."); }
 
-  /**
-   * Number the filename.
-   **/
-  private String iterateName(String name) {
-    Pattern p = Pattern.compile("\\d+$");
-    Matcher m = p.matcher(name);
-    int num = 1;
-    if (m.find()) { num = Integer.parseInt(m.group()) + 1; }
-    return name + "." + Integer.toString(num);
-  }
+  public String formatDocId(String docIdText) { return docIdText.replace("/", "."); }
 
   private void skipSection(String localName) {
     try {
@@ -259,7 +255,7 @@ public class XMLTableParser {
     this.xmlStream = xmlStream;
     this.factory = XMLInputFactory.newInstance();
     this.fileName = file.getName();
-    this.seenNames = new HashSet<String>();
+    this.seenNames = new HashMap<String, Integer>();
     this.tableGrids = new ArrayList<TableGrid>();
   }
 }
