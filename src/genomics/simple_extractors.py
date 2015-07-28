@@ -3,6 +3,28 @@ import data_util as dutil
 import re
 
 
+def load_dicts():
+  """Wrapper function for loading required dictionaries"""
+  g = load_g_dict()
+  p = load_p_dict()
+  return {'g':g, 'p':p}
+
+
+def tag_all(s, sid, dicts):
+  """
+  Wrapper function to tag entities in correct order
+  Returns the html-tagged string and a dictionary of entity lists
+  """
+  entities = {}
+  g_tagged, g_entities = tag_g(s, sid, dicts['g'])
+  if len(g_entities) > 0:
+    entities['g'] = g_entities
+  p_tagged, p_entities = tag_p(g_tagged, sid, dicts['p'])
+  if len(p_entities) > 0:
+    entities['p'] = p_entities
+  return p_tagged, entities
+
+
 ### GENE ###
 
 GENE_TAG_START = "G"
@@ -17,17 +39,23 @@ def load_g_dict():
         g[phrase].add(ensembl_id)
   return g
 
-def tag_g(s, genes):
-  """Simple function to tag canonical gene mentions- also returns whether any found"""
+def tag_g(s, sid, genes):
+  """
+  Simple function to tag canonical gene mentions.
+  Returns tagged input and non-unique entities list
+  NOTE that the entity list is a list of pipe-concatenated entity matches per mention
+  """
   toks = re.split(r'\s+', s)
   toks_out = []
+  entities = []
   for tok in toks:
     new_tok = tok
     if len(tok) > 3 and tok in genes:
-      entities = '|'.join(list(genes[tok]))
-      new_tok = '<%s entity="%s">%s</%s>' % (GENE_TAG_START, entities, tok, GENE_TAG_END)
+      entity = '|'.join(list(genes[tok]))
+      new_tok = '<%s id="g-%s-%s" entity="%s">%s</%s>' % (GENE_TAG_START, sid, len(entities), entity, tok, GENE_TAG_END)
+      entities.append(entity)
     toks_out.append(new_tok)
-  return ' '.join(toks_out), not (toks == toks_out)
+  return ' '.join(toks_out), entities
 
 
 ### PHENO ###
@@ -51,11 +79,15 @@ def load_p_dict():
 def keep_word(w):
   return (w.lower() not in STOPWORDS and len(w) > 2)
 
-def tag_p(s, phenos):
-  """Simple function (reduced from version in dd-genomics) to tag pheno mentions- also
-  returns whether any were found"""
+def tag_p(s, sid, phenos):
+  """
+  Simple function to tag pheno mentions.
+  Returns tagged input and non-unique entities list
+  NOTE that the entity list is a list of pipe-concatenated entity matches per mention
+  """
   toks = re.split(r'\s+', s)
   mentions = []
+  entities = []
 
   # First we initialize a list of indices which we 'split' on,
   # i.e. if a window intersects with any of these indices we skip past it
@@ -104,5 +136,6 @@ def tag_p(s, phenos):
   # sub in the tagged entities
   s_out = ' '.join(toks)
   for m in mentions:
-    s_out = re.sub(re.escape(m[0]), '<%s entity="%s">%s</%s>' % (PHENO_TAG_START, m[1], m[0], PHENO_TAG_END), s_out, flags=re.I)
-  return s_out, len(mentions) > 0
+    s_out = re.sub(re.escape(m[0]), '<%s id="p-%s-%s" entity="%s">%s</%s>' % (PHENO_TAG_START, sid, len(entities), m[1], m[0], PHENO_TAG_END), s_out, flags=re.I)
+    entities.append(m[1])
+  return s_out, entities
