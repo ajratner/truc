@@ -27,12 +27,15 @@ class TableCell:
     self.x = [int(x) for x in obj['x']] if type(obj['x']) is list else [int(obj['x'])]*2
     self.y = [int(y) for y in obj['y']] if type(obj['y']) is list else [int(obj['y'])]*2
 
+  def _add_to_json_dict(self, obj, key, short_name):
+    v = self.__dict__[key]
+    if len(v) > 0:
+      obj[short_name] = v
+
   def to_json_dict(self):
     obj = {'c':self.content}
-    if len(self.attributes) > 0:
-      obj['attrs'] = self.attributes
-    if len(self.entities) > 0:
-      obj['ents'] = self.entities
+    self._add_to_json_dict(obj, 'attributes', 'attrs')
+    self._add_to_json_dict(obj, 'entities', 'ents')
     obj['x'] = self.x[0] if self.x[0] == self.x[1] else self.x
     obj['y'] = self.y[0] if self.y[0] == self.y[1] else self.y
     return obj
@@ -51,6 +54,7 @@ class TableGrid:
     self.after = obj.get('aft', '').encode('utf8')
     self.before_entities = obj.get('bef-ents', {})
     self.after_entities = obj.get('aft-ents', {})
+    self.supervision = obj.get('sup', {})
 
   def get_all_entities(self):
     ents = merge_list_dicts(self.before_entities, self.after_entities)
@@ -63,16 +67,18 @@ class TableGrid:
     R = len(self.cells)
     self.cells.sort(key=lambda c : c.y[0]*R + c.x[0])
 
+  def _add_to_json_dict(self, obj, key, short_name):
+    v = self.__dict__[key]
+    if len(v) > 0:
+      obj[short_name] = v
+
   def to_json_dict(self):
-    obj = {"id":self.id, "cells":[cell.to_json_dict() for cell in self.cells]}
-    if len(self.before) > 0:
-      obj['bef'] = self.before
-    if len(self.after) > 0:
-      obj['aft'] = self.after
-    if len(self.before_entities) > 0:
-      obj['bef-ents'] = self.before_entities
-    if len(self.after_entities) > 0:
-      obj['aft-ents'] = self.after_entities
+    obj = {"id": self.id, "cells": [cell.to_json_dict() for cell in self.cells]}
+    self._add_to_json_dict(obj, 'before', 'bef')
+    self._add_to_json_dict(obj, 'after', 'aft')
+    self._add_to_json_dict(obj, 'before_entities', 'bef-ents')
+    self._add_to_json_dict(obj, 'after_entities', 'aft-ents')
+    self._add_to_json_dict(obj, 'supervision', 'sup')
     return obj
 
   def to_dict(self):

@@ -41,8 +41,9 @@ def tag_g(s, sid, genes):
     new_tok = tok
     if len(tok) > 3 and tok in genes:
       entity = '|'.join(list(genes[tok]))
-      new_tok = '<%s id="g-%s-%s" entity="%s">%s</%s>' % (GENE_TAG_START, sid, len(entities), entity, tok, GENE_TAG_END)
-      entities.append(entity)
+      tag_id = 'g-%s-%s' % (sid, len(entities))
+      new_tok = '<%s id="%s" entity="%s">%s</%s>' % (GENE_TAG_START, tag_id, entity, tok, GENE_TAG_END)
+      entities.append((entity, tag_id))
     toks_out.append(new_tok)
   return ' '.join(toks_out), entities
 
@@ -113,6 +114,8 @@ def tag_p(s, sid, phenos):
   # sub in the tagged entities
   s_out = ' '.join(toks)
   for m in mentions:
-    s_out = re.sub(re.escape(m[0]), '<%s id="p-%s-%s" entity="%s">%s</%s>' % (PHENO_TAG_START, sid, len(entities), m[1], m[0], PHENO_TAG_END), s_out, flags=re.I)
-    entities.append(m[1])
+    entity = m[1]
+    tag_id = 'p-%s-%s' % (sid, len(entities))
+    s_out = re.sub(re.escape(m[0]), '<%s id="%s" entity="%s">%s</%s>' % (PHENO_TAG_START, tag_id, entity, m[0], PHENO_TAG_END), s_out, flags=re.I)
+    entities.append((entity, tag_id))
   return s_out, entities
