@@ -1,0 +1,142 @@
+{
+    "beaker": "2",
+    "evaluators": [
+        {
+            "name": "Html",
+            "plugin": "Html",
+            "view": {
+                "cm": {
+                    "mode": "htmlmixed"
+                }
+            }
+        },
+        {
+            "name": "Latex",
+            "plugin": "Latex",
+            "view": {
+                "cm": {
+                    "mode": "stex"
+                }
+            }
+        },
+        {
+            "name": "JavaScript",
+            "plugin": "JavaScript",
+            "jsSetting2": "",
+            "jsSetting1": "",
+            "view": {
+                "cm": {
+                    "mode": "javascript",
+                    "background": "#FFE0F0"
+                }
+            }
+        },
+        {
+            "name": "IPython",
+            "plugin": "IPython",
+            "setup": "%load_ext autoreload\n%autoreload 2\n%matplotlib inline\nimport numpy\nimport matplotlib\nfrom matplotlib import pylab, mlab, pyplot\nnp = numpy\nplt = pyplot\nfrom IPython.display import display\nfrom IPython.core.pylabtools import figsize, getfigs\nfrom pylab import *\nfrom numpy import *",
+            "view": {
+                "cm": {
+                    "mode": "python"
+                }
+            }
+        }
+    ],
+    "cells": [
+        {
+            "id": "sectionIEVO8G",
+            "type": "section",
+            "title": "Scrap notebook",
+            "level": 1,
+            "evaluatorReader": false,
+            "collapsed": false
+        },
+        {
+            "id": "markdownmT6q9X",
+            "type": "markdown",
+            "body": [
+                "[7/27/15]: *Debugging:* Why is Charite supervision returning no matches?  Unlucky or a bug somwhere?  **--> A bug found!**  [RESOLVED]"
+            ],
+            "evaluatorReader": false
+        },
+        {
+            "id": "codeV8dwcm",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "import sys",
+                    "ROOT_PATH = '/lfs/local/0/ajratner/truc'",
+                    "sys.path.append('%s/src' % ROOT_PATH)",
+                    "from table_struct import *",
+                    "",
+                    "tables = load_table_grids('%s/data/plos_30k_tables_g_and_p_tagged.json' % ROOT_PATH, max_n=10)"
+                ]
+            },
+            "output": {
+                "state": {},
+                "selectedType": "Hidden",
+                "pluginName": "IPython",
+                "shellId": "EF58D697C3CA43CC8811A6FEA945D1A4",
+                "elapsedTime": 311
+            },
+            "evaluatorReader": true,
+            "lineCount": 6
+        },
+        {
+            "id": "codepDtrrj",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "table = tables[0]",
+                    "",
+                    "tes = table.get_all_entities()",
+                    "print 'All table entities: %s' % len(tes['g'])",
+                    "print 'In cells: %s' % sum([len(cell.entities.get('g',[])) for cell in table.cells])",
+                    "print 'In wrapper: %s' % (len(table.before_entities.get('g',[])) + len(table.after_entities.get('g',[])))"
+                ]
+            },
+            "output": {
+                "state": {},
+                "selectedType": "Results",
+                "pluginName": "IPython",
+                "shellId": "EF58D697C3CA43CC8811A6FEA945D1A4",
+                "elapsedTime": 195,
+                "dataresult": 44
+            },
+            "evaluatorReader": true,
+            "lineCount": 6
+        },
+        {
+            "id": "markdownRemacn",
+            "type": "markdown",
+            "body": [
+                "[7/27/15]: Is `merge_list_dicts` not working...?  **copy/deepcopy-type error...**  [RESOLVED]"
+            ],
+            "evaluatorReader": false
+        },
+        {
+            "id": "codeG1HaTZ",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "a = {'a':1, 'b':(1,2,3), 'c':[1,2,3]}",
+                    "b = {'a':4, 'b':4, 'c':[4], 'd':4}",
+                    "print merge_list_dicts(a,b)"
+                ],
+                "hidden": true
+            },
+            "output": {
+                "state": {},
+                "selectedType": "Results",
+                "pluginName": "IPython",
+                "shellId": "23B6E9BAD2354AD28176CA8A90663640",
+                "elapsedTime": 460
+            },
+            "evaluatorReader": true,
+            "lineCount": 3
+        }
+    ]
+}

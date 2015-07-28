@@ -2,13 +2,11 @@ from collections import defaultdict
 import data_util as dutil
 import re
 
-
 def load_dicts():
   """Wrapper function for loading required dictionaries"""
-  g = load_g_dict()
-  p = load_p_dict()
+  g = dutil.gene_symbol_to_ensembl_id_map(include_lowercase=False, constrain_to=['CANONICAL_SYMBOL'])
+  p = dutil.pheno_phrase_to_hpo_id_map()
   return {'g':g, 'p':p}
-
 
 def tag_all(s, sid, dicts):
   """
@@ -29,15 +27,6 @@ def tag_all(s, sid, dicts):
 
 GENE_TAG_START = "G"
 GENE_TAG_END = GENE_TAG_START
-
-def load_g_dict():
-  g = defaultdict(set)
-  with open('dicts/ensembl_genes.tsv', 'rb') as f:
-    for line in f:
-      ensembl_id, phrase, mapping_type = line.rstrip('\n').split('\t')
-      if mapping_type == 'CANONICAL_SYMBOL':
-        g[phrase].add(ensembl_id)
-  return g
 
 def tag_g(s, sid, genes):
   """
@@ -62,19 +51,7 @@ def tag_g(s, sid, genes):
 
 PHENO_TAG_START = "P"
 PHENO_TAG_END = PHENO_TAG_START
-
 STOPWORDS = frozenset([w.strip() for w in open('dicts/stopwords.tsv', 'rb')])
-
-def load_p_dict():
-  hpo_dag = dutil.read_hpo_dag('dicts/hpo_phenotypes.tsv')
-  valid_hpo_ids = frozenset(dutil.get_hpo_phenos(hpo_dag))
-  p = defaultdict(set)
-  with open('dicts/pheno_terms.tsv', 'rb') as f:
-    for line in f:
-      hpo_id, phrase, mapping_type = line.rstrip('\n').split('\t')
-      if hpo_id in valid_hpo_ids:
-        p[phrase].add(hpo_id)
-  return p
 
 def keep_word(w):
   return (w.lower() not in STOPWORDS and len(w) > 2)

@@ -1,12 +1,15 @@
 import json
+import copy
 
 
-def merge_list_dicts(a, b):
+def merge_list_dicts(a_in, b_in):
   """
   Merges two dictionaries with the following rule set:
     - if both dicts have same key and both values are lists, concatenate
     - else b replaces a if conflict
   """
+  a = copy.deepcopy(a_in)
+  b = copy.deepcopy(b_in)
   for k,v in b.iteritems():
     if type(v) in [list,tuple] and k in a and type(a[k]) in [list,tuple]:
       a[k] = list(a[k]) + list(v)
