@@ -95,3 +95,46 @@ def load_gp_supervision(hpo_dag=None):
         for h in hpo_ids:
           supervision_pairs.add((e,h))
   return supervision_pairs
+
+
+### GENE-VARIANT ###
+
+# regexes from tmVar paper
+# See Table 3 in http://bioinformatics.oxfordjournals.org/content/early/2013/04/04/bioinformatics.btt156.full.pdf
+def comp_gv_rgx():
+  
+  # A bit silly, but copy from pdf wasn't working, and this format is simple to copy & debug...
+  a = r'[cgrm]'
+  i = r'IVS'
+  b = r'ATCGatcgu'
+
+  s1 = r'0-9\_\.\:'
+  s2 = r'\/\>\?\(\)\[\]\;\:\*\_\-\+0-9'
+  s3 = r'\/\>\<\?\(\)\[\]\;\:\*\_\-\+0-9'
+
+  b1 = r'[%s]' % b
+  bs1 = r'[%s%s]' % (b,s1)
+  bs2 = r'[%s %s]' % (b,s2)
+  bs3 = r'[%s %s]' % (b,s3)
+
+  c1 = r'(inv|del|ins|dup|tri|qua|con|delins|indel)'
+  c2 = r'(del|ins|dup|tri|qua|con|delins|indel)'
+  c3 = r'(inv|del|ins|dup|tri|qua|con|delins|indel|fsX|fsx|fs)'
+
+  p = r'CISQMNPKDTFAGHLRWVEYX'
+  ps2 = r'[%s %s]' % (p, s2)
+  ps3 = r'[%s %s]' % (p, s3)
+
+  # regexes correspond to gene ('g') or protein ('p') variants
+  GV_RGXS = [
+    (r'(%s\.%s+%s%s*)' % (a,bs3,c1,bs1), 'g'),
+    (r'(IVS%s+%s%s*)' % (bs3,c2,bs1), 'g'),
+    (r'((%s\.|%s)%s+)' % (a,i,bs2), 'g'),
+    (r'((%s\.)?%s[0-9]+%s)' % (a,b1,b1), 'g'),
+    (r'([0-9]+%s%s*)' % (c2,b1), 'g'),
+    (r'([p]\.%s+%s%s*)' % (ps3,c3,ps3), 'p'),
+    (r'([p]\.%s+)' % ps2, 'p'),
+    (r'([p]\.[A-Z][a-z]{0,2}[\W\-]{0,1}[0-9]+[\W\-]{0,1}([A-Z][a-z]{0,2}|(fs|fsx|fsX)))', 'p')]
+
+  # Just return as one giant regex for now
+  return r'|'.join([gvr[0] for gvr in GV_RGXS])

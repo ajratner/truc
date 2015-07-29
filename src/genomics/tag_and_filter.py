@@ -24,5 +24,6 @@ if __name__ == '__main__':
 
     # filter: both g and p
     table_entities = table.get_all_entities()
-    if 'g' in table_entities and 'p' in table_entities:
+    #if 'g' in table_entities and 'p' in table_entities:
+    if 'v' in table_entities:
       print json.dumps(table.to_json_dict())

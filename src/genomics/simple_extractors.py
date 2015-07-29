@@ -17,7 +17,10 @@ def tag_all(s, sid, dicts):
   g_tagged, g_entities = tag_g(s, sid, dicts['g'])
   if len(g_entities) > 0:
     entities['g'] = g_entities
-  p_tagged, p_entities = tag_p(g_tagged, sid, dicts['p'])
+  v_tagged, v_entities = tag_v(g_tagged, sid)
+  if len(v_entities) > 0:
+    entities['v'] = v_entities
+  p_tagged, p_entities = tag_p(v_tagged, sid, dicts['p'])
   if len(p_entities) > 0:
     entities['p'] = p_entities
   return p_tagged, entities
@@ -119,3 +122,34 @@ def tag_p(s, sid, phenos):
     s_out = re.sub(re.escape(m[0]), '<%s id="%s" entity="%s">%s</%s>' % (PHENO_TAG_START, tag_id, entity, m[0], PHENO_TAG_END), s_out, flags=re.I)
     entities.append((entity, tag_id))
   return s_out, entities
+
+
+### GENE-VARIANT ###
+
+GV_TAG_START = "V"
+GV_TAG_END = GV_TAG_START
+
+GV_RGX = r'^(%s)$' % dutil.comp_gv_rgx()
+
+def tag_v(s, sid):
+  """
+  Simple function to tag gene variant mentions, based on regex features in tmVar paper.
+  Returns tagged input and non-unique entities list
+  NOTE that the entity list is just the GV string (for now)
+  """
+  
+  # NOTE that we search over single tokens for now
+  toks = re.split(r'\s+', s)
+  toks_out = []
+  entities = []
+  for tok in toks:
+    m = re.search(GV_RGX, tok)
+    if m and not tok.startswith("<"):
+      entity = m.group(0)
+      tag_id = 'v-%s-%s' % (sid, len(entities))
+      toks_out.append(re.sub(GV_RGX, '<%s id="%s" entity="%s">%s</%s>' % (GV_TAG_START, tag_id, entity, entity, GV_TAG_END), tok))
+      entities.append((entity, tag_id))
+    else:
+      toks_out.append(tok)
+
+  return ' '.join(toks_out), entities
