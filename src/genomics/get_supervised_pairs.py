@@ -2,15 +2,16 @@ import sys
 sys.path.append('../../src')
 import json
 from collections import defaultdict
-from table_struct import TableGrid
-from simple_extractors import *
+from objects import TableGrid, Relation
 import data_util as dutil
 
 if __name__ == '__main__':
-  """Script to tag & filter the tables for / based on entities (G, P, GV)"""
+  """Script to tag & filter the tables for / based on entities (G, P)"""
   gp = dutil.load_gp_supervision()
   for line in sys.stdin:
     table = TableGrid(json.loads(line))
+
+    r = Relation(table)
 
     # Supervise as true if in the Charite set
     table_entities = table.get_all_entities()
