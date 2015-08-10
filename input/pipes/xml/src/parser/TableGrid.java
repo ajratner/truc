@@ -115,7 +115,7 @@ public class TableGrid {
       s.append("\t");
       s.append(coords[3] - coords[2]);
 
-      s.append("\n");
+      if (i < cellContents.size() - 1) { s.append("\n"); }
     }
     return s.toString();
   }
