@@ -1,3 +1,5 @@
+env_local.sh
+
 # data
 *.json
 *.processed

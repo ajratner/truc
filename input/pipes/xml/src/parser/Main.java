@@ -14,18 +14,21 @@ public class Main {
 
   public static void main(String[] args) {
     if (args.length != 1) {
-      System.out.println("Usage: java -ea -jar parser.jar [XML_FILES_DIR]");
+      System.out.println("Usage: java -ea -jar parser.jar [IN: XML_FILES_DIR]");
       System.exit(0);
     }
 
+    // Get files
     ArrayList<File> files = getAllFiles(args[0]);
 
+    // Extract the tables
     try {
       for (File file : files) {
         InputStream xmlInput = new FileInputStream(file);
         XMLTableParser parser = new XMLTableParser(xmlInput, file);
         for (TableGrid tableGrid : parser.parse()) {
-          System.out.println(tableGrid.toJSONString());
+          //System.out.println(tableGrid.toJSONString());
+          System.out.println(tableGrid.toTSV());
         }
       }
     } catch (Throwable err) {

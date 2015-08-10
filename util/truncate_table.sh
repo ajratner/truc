@@ -1,0 +1,1 @@
+psql -U $DBUSER -h $DBHOST -p $DBPORT -d $DBNAME -c "TRUNCATE TABLE $1"
