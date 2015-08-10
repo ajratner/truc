@@ -6,8 +6,11 @@ export DBHOST=raiders2.stanford.edu
 export DBPORT=6432
 export DBNAME=tables
 
+export PARALLELISM=40
+
 export GPPORT=8097
 export GPHOST=$DBHOST
+export PARALLEL_GROUNDING=true
 
 export ROOT_HOME=/lfs/local/0/ajratner
 export DEEPDIVE_HOME=${ROOT_HOME}/deepdive_0_6

@@ -31,7 +31,7 @@ def extract_candidate_mentions(row, gene_dict):
     
     # Strip of any leading/trailing non-alphanumeric characters
     # TODO: Do better tokenization early on so this is unnecessary!
-    word = re.sub(r'^[^a-z0-9]+|[^a-z0-9]+$', word, flags=re.I)
+    word = re.sub(r'^[^a-z0-9]+|[^a-z0-9]+$', '', word, flags=re.I)
 
     if len(word) > 3 and word in gene_dict:
       mentions.append(

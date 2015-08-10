@@ -25,6 +25,8 @@ Mention = collections.namedtuple('Mention', [
             'is_correct'])
 
 ### CANDIDATE EXTRACTION ###
+STOPWORDS = frozenset([w.strip() for w in open('%s/dicts/stopwords.tsv' % os.environ['APP_HOME'], 'rb')])
+
 def keep_word(w):
   return (w.lower() not in STOPWORDS and len(w) > 2)
 
@@ -57,7 +59,7 @@ def extract_candidate_mentions(row, pheno_dict):
 
       # Strip of any leading/trailing non-alphanumeric characters
       # TODO: Do better tokenization early on so this is unnecessary!
-      words = [re.sub(r'^[^a-z0-9]+|[^a-z0-9]+$', w.lower()) for w in row.words[i:i+n]]
+      words = [re.sub(r'^[^a-z0-9]+|[^a-z0-9]+$', '', w.lower()) for w in row.words[i:i+n]]
 
       # skip this window if it intersects with the split set
       if not split_indices.isdisjoint(word_idxs):
@@ -68,7 +70,7 @@ def extract_candidate_mentions(row, pheno_dict):
         continue
 
       # filter out stop words
-      words = filter(keep_words, words)
+      words = filter(keep_word, words)
       
       # (1) Check for exact match (including exact match of lemmatized / stop words removed)
       # If found add to split list so as not to consider subset phrases

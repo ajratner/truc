@@ -24,36 +24,7 @@ def rgx_mult_search(phrase, strings=[], rgxs=[], flags=re.I):
       return s
   return None
 
-# HACK[Alex]: this is probably justified but a bit hackey still...
-def skip_row(row):
-  """
-  Filter sentences dynamically which we want to skip for now uniformly across all extractors
-  NOTE: could do this as preprocessing step but since this is a bit of a hack should be more
-  transparent...
-  Assumes Row object has words, poses attributes
-  """
-
-  # Hack[Alex]: upper limit for sentences, specifically to deal w preprocessing errors
-  if len(row.words) > 90:
-    return True
-
-  # Require that there is a verb in the sentence
-  try:
-    if not any(pos.startswith("VB") for pos in row.poses):
-      return True
-  except AttributeError:
-    pass
-
-  # Filter out by certain specific identifying tokens
-  exclude_strings = ['http://', 'https://']
-  exclude_patterns = ['\w+\.(com|org|edu|gov)']
-  for ex in [re.escape(s) for s in exclude_strings] + exclude_patterns:
-    for word in row.words:
-      if re.search(ex, word, re.I|re.S):
-        return True
-  return False
-
-APP_HOME = os.environ['GDD_HOME']
+APP_HOME = os.environ['APP_HOME']
 
 def print_error(err_string):
   """Function to write to stderr"""
@@ -71,7 +42,6 @@ def tsv_string_to_list(s, func=lambda x : x, sep='|^|'):
 
   # split and apply function
   return [func(x.strip()) for x in split]
-
 
 def tsv_string_to_listoflists(s, func=lambda x : x, sep1='|~|', sep2='|^|'):
   """Convert a TSV string from sentences_input table to a list of lists"""
@@ -162,22 +132,3 @@ def print_tsv_output(out_record):
       cur_val = x
     values.append(cur_val)
   print '\t'.join(str(x) for x in values)
-
-def run_main_tsv(row_parser, row_fn):
-  """
-  Runs through lines in sys.stdin, applying row_fn(row_parser(line))
-  Assumes that this outputs a list of rows, which get printed out in tsv format
-  Has standard error handling for malformed rows- optimally row_fn returns object with pretty print
-  """
-  lines_out = []
-  for line in sys.stdin:
-    row = row_parser(line)
-    try:
-      lines_out += row_fn(row)
-    
-    # A malformed input line will often mess up the word indexing...
-    except IndexError:
-      print_error("Error with row: %s" % (row,))
-
-  for line in lines_out:
-    print_tsv_output(line)
