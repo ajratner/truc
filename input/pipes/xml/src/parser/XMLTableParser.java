@@ -28,7 +28,6 @@ public class XMLTableParser {
     HashMap<String, String> attrs = new HashMap<String, String>(); 
     for (int i=0; i < parser.getAttributeCount(); i++) {
       attrs.put(parser.getAttributeLocalName(i), parser.getAttributeValue(i));
-      //System.out.println(parser.getAttributeLocalName(i) + " : " + parser.getAttributeValue(i));
     }
     return attrs;
   }
@@ -133,7 +132,7 @@ public class XMLTableParser {
               }
 
               // Add cell to tablegrid
-              tableGrid.addCell(getFlatElementText(localName), attrs, x, xEnd, y, yEnd);
+              tableGrid.addCell(getFlatElementText(localName), "CELL", attrs, x, xEnd, y, yEnd);
               x = xEnd;
             } 
             break;
@@ -181,7 +180,9 @@ public class XMLTableParser {
       System.out.println(ex);
     }
     if (tableGrid != null) { 
-      tableGrid.addWrapper(before, after);
+      // Add before and after as cells to tablegrid
+      tableGrid.addCell(before, "PRE", null, -1, -1, -1, -1);
+      tableGrid.addCell(after, "POST", null, -1, -1, -1, -1);
       tableGrids.add(tableGrid); 
     }
   }
