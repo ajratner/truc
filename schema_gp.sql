@@ -9,7 +9,7 @@ CREATE TABLE cells (
   xspan INT,
   ypos INT,
   yspan INT
-);
+) DISTRIBUTED BY (table_id);
 
 DROP TABLE IF EXISTS gene_mentions CASCADE;
 CREATE TABLE gene_mentions (
@@ -21,7 +21,7 @@ CREATE TABLE gene_mentions (
   entity TEXT,
   type TEXT,
   is_correct BOOLEAN
-);
+) DISTRIBUTED BY (table_id);
 
 DROP TABLE IF EXISTS pheno_mentions CASCADE;
 CREATE TABLE pheno_mentions (
@@ -33,7 +33,7 @@ CREATE TABLE pheno_mentions (
   entity TEXT,
   type TEXT,
   is_correct BOOLEAN
-);
+) DISTRIBUTED BY (table_id);
 
 DROP TABLE IF EXISTS genepheno_relations CASCADE;
 CREATE TABLE genepheno_relations (
@@ -44,4 +44,4 @@ CREATE TABLE genepheno_relations (
   pheno_mention_id TEXT,
   type TEXT,
   is_correct BOOLEAN
-);
+) DISTRIBUTED BY (table_id);

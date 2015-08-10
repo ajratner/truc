@@ -27,9 +27,11 @@ else
 fi
 
 # Launch gpfdist if not launched.
-gpfdist -d $GPPATH -p $GPPORT &
-gpfdist_pid=$!
-trap "kill $gpfdist_pid" EXIT
+if [ "$DBTYPE" == "gp" ]; then
+  gpfdist -d $GPPATH -p $GPPORT &
+  gpfdist_pid=$!
+  trap "kill $gpfdist_pid" EXIT
+fi
 
 cd $DEEPDIVE_HOME
 sbt "run -c $APP_HOME/${APP_CONF:-application.conf}"
