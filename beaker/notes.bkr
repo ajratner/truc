@@ -1,0 +1,184 @@
+{
+    "beaker": "2",
+    "evaluators": [
+        {
+            "name": "Html",
+            "plugin": "Html",
+            "view": {
+                "cm": {
+                    "mode": "htmlmixed"
+                }
+            }
+        },
+        {
+            "name": "Latex",
+            "plugin": "Latex",
+            "view": {
+                "cm": {
+                    "mode": "stex"
+                }
+            }
+        },
+        {
+            "name": "JavaScript",
+            "plugin": "JavaScript",
+            "jsSetting2": "",
+            "jsSetting1": "",
+            "view": {
+                "cm": {
+                    "mode": "javascript",
+                    "background": "#FFE0F0"
+                }
+            }
+        },
+        {
+            "name": "IPython",
+            "plugin": "IPython",
+            "setup": "%load_ext autoreload\n%autoreload 2\n%matplotlib inline\nimport numpy\nimport matplotlib\nfrom matplotlib import pylab, mlab, pyplot\nnp = numpy\nplt = pyplot\nfrom IPython.display import display\nfrom IPython.core.pylabtools import figsize, getfigs\nfrom pylab import *\nfrom numpy import *",
+            "view": {
+                "cm": {
+                    "mode": "python"
+                }
+            }
+        }
+    ],
+    "cells": [
+        {
+            "id": "codeim0hzC",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "import psycopg2"
+                ],
+                "hidden": true
+            },
+            "output": {
+                "state": {},
+                "selectedType": "Hidden",
+                "pluginName": "IPython",
+                "shellId": "E389EBEF43E8411DB525F3C125BC6842",
+                "elapsedTime": 291
+            },
+            "evaluatorReader": true,
+            "lineCount": 1
+        },
+        {
+            "id": "section44qoEv",
+            "type": "section",
+            "title": "Q1: How accurate is our distant supervision, presented as G-P tuples?",
+            "level": 2,
+            "evaluatorReader": false,
+            "collapsed": false
+        },
+        {
+            "id": "code6eKrDQ",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "with psycopg2.connect(\"dbname=tables user=aratner\") as conn:",
+                    "    with conn.cursor() as cur:",
+                    "        cur.execute(\"SELECT label, COUNT(*) FROM labels_charite_sup GROUP BY label;\")",
+                    "        results = cur.fetchall()",
+                    "        for res in results:",
+                    "            print \"%s : %s\" % res",
+                    "        accuracy = (float(results[1][1])/(results[0][1]+results[1][1])) * 100",
+                    "        print \"\\nAccuracy: %d%%\" % accuracy"
+                ],
+                "hidden": true
+            },
+            "output": {
+                "state": {},
+                "result": {
+                    "type": "Results",
+                    "outputdata": [
+                        {
+                            "type": "out",
+                            "value": "False : 87\nTrue : 13\n\nAccuracy: 13%\n"
+                        }
+                    ]
+                },
+                "selectedType": "Results",
+                "pluginName": "IPython",
+                "shellId": "F9E56862F3F640FA8436D64808D9C9A2",
+                "elapsedTime": 176
+            },
+            "evaluatorReader": true,
+            "lineCount": 8
+        },
+        {
+            "id": "markdowns9q9y5",
+            "type": "markdown",
+            "body": [
+                "**Answer:** it seems that this is insufficient input to the system, possibly due to:",
+                "* the very data-dense nature of the tables",
+                "* the fact that we are not supplying implicit constraints such as *must occur in same sentence*",
+                "",
+                "**We need the equivalent of *\"must be in the same sentence\"* except more flexible.**  And presumably we need to have some structural parse of the table to do so (and then define something like `MAX_PATH_LEN` on this structure).  But how complex is this structure?"
+            ],
+            "evaluatorReader": false
+        },
+        {
+            "id": "sectionqCpHmz",
+            "type": "section",
+            "title": "Q2: How many tables have non-trivial structure?",
+            "level": 2,
+            "evaluatorReader": false,
+            "collapsed": false
+        },
+        {
+            "id": "codeN6VrJe",
+            "type": "code",
+            "evaluator": "IPython",
+            "input": {
+                "body": [
+                    "with psycopg2.connect(\"dbname=tables user=aratner\") as conn:",
+                    "    with conn.cursor() as cur:",
+                    "        cur.execute(\"SELECT label, COUNT(*) FROM labels_charite_sup_complex GROUP BY label;\")",
+                    "        results = cur.fetchall()",
+                    "        accuracy = (float(results[1][1])/(results[0][1]+results[1][1])) * 100",
+                    "        print \"\\nAccuracy: %d%%\" % accuracy"
+                ],
+                "hidden": true
+            },
+            "output": {
+                "state": {},
+                "result": {
+                    "type": "Results",
+                    "outputdata": [
+                        {
+                            "type": "out",
+                            "value": "\nAccuracy: 53%\n"
+                        }
+                    ]
+                },
+                "selectedType": "Results",
+                "pluginName": "IPython",
+                "shellId": "E389EBEF43E8411DB525F3C125BC6842",
+                "elapsedTime": 198
+            },
+            "evaluatorReader": true,
+            "lineCount": 6
+        },
+        {
+            "id": "sectionNNc15y",
+            "type": "section",
+            "title": "TO-DO:",
+            "level": 2,
+            "evaluatorReader": false,
+            "collapsed": false
+        },
+        {
+            "id": "markdownNhLUln",
+            "type": "markdown",
+            "body": [
+                "* Explore more complex relationships e.g. G-V-P?",
+                "* Think about parsing table structure",
+                "* Think more about distant supervision vs. feature vs. constraint...",
+                "* **Write feature library & do some actual testing!**"
+            ],
+            "evaluatorReader": false
+        }
+    ]
+}
