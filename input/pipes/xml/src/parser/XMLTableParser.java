@@ -68,7 +68,7 @@ public class XMLTableParser {
   private TableGrid parseTable(String docId) {
 
     // Get tableId from docId
-    assert docId != null;
+    if (docId == null) { return null; }
     int tableNum;
     String tableId = docId + "." + "Table";
     if (seenNames.containsKey(tableId)) {
@@ -192,6 +192,7 @@ public class XMLTableParser {
    */
   public ArrayList<TableGrid> parse() {
     String docId = null;
+    TableGrid table;
     try {
       parser = factory.createXMLStreamReader(this.xmlStream);
       while (true) {
@@ -209,7 +210,8 @@ public class XMLTableParser {
 
           // get tables
           } else if (localName.equals("table")) {
-            tableGrids.add(parseTable(docId));
+            table = parseTable(docId);
+            if (table != null) { tableGrids.add(table); }
           }
         } else if (event == XMLStreamConstants.END_DOCUMENT) {
           parser.close();
