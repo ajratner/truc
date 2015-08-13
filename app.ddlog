@@ -1,0 +1,80 @@
+### SCHEMA ###
+cells(
+  table_id    text,
+  cell_id     int,
+  words       text[],
+  type        text,
+  attributes  text[],
+  xpos        int,
+  xspan       int,
+  ypos        int,
+  yspan       int
+).
+
+gene_mentions(
+  mention_id  text,
+  table_id    text,
+  cell_id     int,
+  word_idxs   int[],
+  entity      text,
+  type        text,
+  is_correct  boolean
+).
+
+pheno_mentions(
+  mention_id  text,
+  table_id    text,
+  cell_id     int,
+  word_idxs   int[],
+  entity      text,
+  type        text,
+  is_correct  boolean
+).
+
+genepheno_relations(
+  relation_id       text,
+  table_id          text,
+  gene_mention_id   text,
+  pheno_mention_id  text,
+  type              text,
+  is_correct        boolean
+).
+
+
+### EXTRACTORS ###
+
+# Gene mentions
+function ext_gene_mentions
+  over like ext_gene_mentions_input
+  returns like gene_mentions
+  implementation "udf/extract_gene_mentions.py" handles tsv lines.
+
+ext_gene_mentions_input(tid, cid, ARRAY_TO_STRING(ws, "|^|")) :-
+  cells(tid, cid, ws, a, b, c, d, e, f).
+
+gene_mentions :- !ext_gene_mentions(ext_gene_mentions_input).
+
+# Pheno mentions
+function ext_pheno_mentions
+  over like ext_pheno_mentions_input
+  returns like pheno_mentions
+  implementation "udf/extract_pheno_mentions.py" handles tsv lines.
+
+ext_pheno_mentions_input(tid, cid, ARRAY_TO_STRING(ws, "|^|")) :-
+  cells(tid, cid, ws, a, b, c, d, e, f).
+
+pheno_mentions :- !ext_pheno_mentions(ext_pheno_mentions_input).
+
+# Gene-Pheno relations
+function ext_genepheno_relations
+  over like ext_genepheno_relations_input
+  returns like genepheno_relations
+  implementation "udf/extract_genepheno_relations.py" handles tsv lines.
+
+ext_genepheno_relations_input(tid, gid, gcid, ARRAY_TO_STRING(gwi, "|^|"), ge, ARRAY_TO_STRING(gcws, "|^|"), gct, ARRAY_TO_STRING(gca, "|^|"), gcx, gcxs, gcy, gcys, pid, pcid, ARRAY_TO_STRING(pwi, "|^|"), pe, ARRAY_TO_STRING(pcws, "|^|"), pct, ARRAY_TO_STRING(pca, "|^|"), pcx, pcxs, pcy, pcys) :-
+  gene_mentions(gid, tid, gcid, gwi, ge, a, b),
+  pheno_mentions(pid, tid, pcid, pwi, pe, c, d),
+  cells(tid, gcid, gcws, gct, gca, gcx, gcxs, gcy, gcys),
+  cells(tid, pcid, pcws, pct, pca, pcx, pcxs, pcy, pcys).
+
+genepheno_relations :- !ext_genepheno_relations(ext_genepheno_relations_input).

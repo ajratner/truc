@@ -1,23 +1,33 @@
 # TRUC
 ### Table Relation Understanding Component
 
-### Preprocessing pipelines
+### Deepdive workflows
 
-#### Example: Genomics- G,P pairs
-To prepare a dataset (in `TableGrid.json` format) from e.g. PLoS data (in PMC-style XML):
-  1. Extract the tables from the XML -> TableGrid.json format:
+#### Example: Genomics: G-P pairs
+Starting with a dataset of tables from XML document data (e.g. a directory of PLoS documents in PMC-style XML):
+  1. Extract the tables from the XML -> `cells.tsv` format:
   
-        export TRUC_HOME=...
-        cd ${TRUC_HOME}/input/pipes/xml/ && ./run.sh [INPUT_DIR] ${TRUC_HOME}/data/tables.json
+        cd ${APP_HOME}/input/parsers/xml/
+        ./run.sh ${INPUT_XML_DIR} ${APP_HOME}/input/data/cells.tsv
   
-  2. Tag and filter tables (tag all Gene or Phenotype entities, keep only tables that have both):
+  2. Compile the DDLog conf file:
   
-        cd ${TRUC_HOME}/src/genomics/ && ./run_parallel.sh tag_and_filter.py ${TRUC_HOME}/data/tables.json 80 1000 ${TRUC_HOME}/data/tables_filtered_tagged.json
-  
-  3. Supervise with Charite:
-  
-        cd ${TRUC_HOME}/src/genomics/ && ./run_parallel.sh supervise.py ${TRUC_HOME}/data/tables_filtered_tagged.json 80 1000 ${TRUC_HOME}/data/tables_sup.json
+        java -jar ${DEEPDIVE_HOME}/util/ddlog.jar compile app.ddlog > deepdive.conf
 
-  4. Subsample resulting set of positive examples: `shuf -n 100 tables_sup.json > tables_sup_subset.json`
+  3. Initialize the database & load data: `cd ${APP_HOME} && deepdive initdb`
   
-  5. View in Beaker Notebook (see `truc/beaker/README.md`)
+  4. *Optional:* Filter the dataset to tables that have at least one G and P [TODO: Put this in ddl?]:
+  
+        deepdive sql
+        ALTER TABLE cells RENAME TO cells_all;
+        CREATE TABLE cells AS (
+          SELECT * 
+          FROM cells_all 
+          WHERE table_id IN (SELECT DISTINCT(table_id) FROM gene_mentions)
+            AND table_id IN (SELECT DISTINCT(table_id) FROM pheno_mentions)
+        );
+  
+  5. Extract G and P mentions, G-P relations: `deepdive run extractions`
+  
+  
+  7. View in Beaker Notebook (use `${TRUC_HOME}/beaker/table_viewer.bkr`; see `truc/beaker/README.md`)

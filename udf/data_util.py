@@ -11,7 +11,7 @@ APP_HOME = os.environ['APP_HOME']
 def gene_symbol_to_ensembl_id_map(include_lowercase=False, constrain_to=None):
   """Maps a gene symbol from CHARITE -> ensembl ID"""
   eid_map = defaultdict(set)
-  with open('%s/dicts/ensembl_genes.tsv' % APP_HOME, 'rb') as f:
+  with open('%s/input/dicts/ensembl_genes.tsv' % APP_HOME, 'rb') as f:
     for line in f:
       eid, phrase, mapping_type = line.rstrip('\n').split('\t')
       if constrain_to is None or mapping_type in constrain_to:
@@ -48,7 +48,7 @@ class Dag:
     return False
 
 def read_hpo_dag():
-  with open('%s/dicts/hpo_phenotypes.tsv' % APP_HOME, 'rb') as f:
+  with open('%s/input/dicts/hpo_phenotypes.tsv' % APP_HOME, 'rb') as f:
     nodes = []
     edges = {}
     for line in f:
@@ -71,7 +71,7 @@ def pheno_phrase_to_hpo_id_map(hpo_dag=None):
   hpo_dag = read_hpo_dag() if hpo_dag is None else hpo_dag
   valid_hpo_ids = frozenset(get_hpo_phenos(hpo_dag))
   phenos = defaultdict(set)
-  with open('%s/dicts/pheno_terms.tsv' % APP_HOME, 'rb') as f:
+  with open('%s/input/dicts/pheno_terms.tsv' % APP_HOME, 'rb') as f:
     for line in f:
       hpo_id, phrase, mapping_type = line.rstrip('\n').split('\t')
       if hpo_id in valid_hpo_ids:
@@ -85,7 +85,7 @@ def load_gp_supervision(hpo_dag=None):
   hpo_dag = read_hpo_dag() if hpo_dag is None else hpo_dag
   genes = gene_symbol_to_ensembl_id_map(include_lowercase=True)
   supervision_pairs = set()
-  with open('%s/dicts/canon_phenotype_to_gene.map' % APP_HOME, 'rb') as f:
+  with open('%s/input/dicts/canon_phenotype_to_gene.map' % APP_HOME, 'rb') as f:
     for line in f:
       hpo_id, gene_symbol = line.strip().split('\t')
       hpo_ids = [hpo_id] + [parent for parent in hpo_dag.edges[hpo_id]]
