@@ -1,23 +1,21 @@
 # TRUC
 ### Table Relation Understanding Component
 
-### Preprocessing pipelines
+### Deepdive workflows
 
-#### Example: Genomics- G,P pairs
-To prepare a dataset (in `TableGrid.json` format) from e.g. PLoS data (in PMC-style XML):
-  1. Extract the tables from the XML -> TableGrid.json format:
+#### Example: Genomics: G-P pairs
+Starting with a dataset of tables from XML document data (e.g. a directory of PLoS documents in PMC-style XML):
+  1. Extract the tables from the XML -> `cells.tsv` format:
   
-        export TRUC_HOME=...
-        cd ${TRUC_HOME}/input/pipes/xml/ && ./run.sh [INPUT_DIR] ${TRUC_HOME}/data/tables.json
+        cd ${APP_HOME}/input/parsers/xml/
+        ./run.sh ${INPUT_XML_DIR} ${APP_HOME}/input/data/cells.tsv
   
-  2. Tag and filter tables (tag all Gene or Phenotype entities, keep only tables that have both):
+  2. Initialize the database & load data: `cd ${APP_HOME} && deepdive initdb`
   
-        cd ${TRUC_HOME}/src/genomics/ && ./run_parallel.sh tag_and_filter.py ${TRUC_HOME}/data/tables.json 80 1000 ${TRUC_HOME}/data/tables_filtered_tagged.json
+  3. *Optional:* Filter the dataset to tables that have at least one G and P: `deepdive run filter_tables`
   
-  3. Supervise with Charite:
+  4. Extract G and P mentions: `deepdive run mentions`
   
-        cd ${TRUC_HOME}/src/genomics/ && ./run_parallel.sh supervise.py ${TRUC_HOME}/data/tables_filtered_tagged.json 80 1000 ${TRUC_HOME}/data/tables_sup.json
-
-  4. Subsample resulting set of positive examples: `shuf -n 100 tables_sup.json > tables_sup_subset.json`
+  5. Extract G-P relations: `deepdive run relations`
   
-  5. View in Beaker Notebook (see `truc/beaker/README.md`)
+  6. View in Beaker Notebook (use `${TRUC_HOME}/beaker/table_viewer.bkr`; see `truc/beaker/README.md`)
