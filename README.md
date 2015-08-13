@@ -8,7 +8,8 @@ Starting with a dataset of tables from XML document data (e.g. a directory of PL
   1. Extract the tables from the XML -> `cells.tsv` format:
   
         export TRUC_HOME=${ABS_PATH_HERE}
-        cd ${TRUC_HOME}/input/parsers/xml/ && ./run.sh [INPUT_DIR] ${TRUC_HOME}/input/data/cells.tsv
+        cd ${TRUC_HOME}/input/parsers/xml/
+        ./run.sh [INPUT_DIR] ${TRUC_HOME}/input/data/cells.tsv
   
   2. Initialize the database & load data: `deepdive initdb`
   
