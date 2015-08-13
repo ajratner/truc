@@ -25,7 +25,7 @@ Mention = collections.namedtuple('Mention', [
             'is_correct'])
 
 ### CANDIDATE EXTRACTION ###
-STOPWORDS = frozenset([w.strip() for w in open('%s/dicts/stopwords.tsv' % os.environ['APP_HOME'], 'rb')])
+STOPWORDS = frozenset([w.strip() for w in open('%s/input/dicts/stopwords.tsv' % os.environ['APP_HOME'], 'rb')])
 
 def keep_word(w):
   return (w.lower() not in STOPWORDS and len(w) > 2)
