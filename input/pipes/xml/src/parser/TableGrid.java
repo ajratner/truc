@@ -76,7 +76,7 @@ public class TableGrid {
     for (int i = 0; i < cellContents.size(); i++) {
 
       // Table ID
-      s.append(id);
+      s.append(escapeTSV(id));
       s.append("\t");
       
       // Cell ID

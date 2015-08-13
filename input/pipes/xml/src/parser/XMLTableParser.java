@@ -57,7 +57,7 @@ public class XMLTableParser {
       }
       return cleanup(section.toString());
     } catch (XMLStreamException ex) {
-      System.out.println(ex);
+      System.err.println(ex);
       return "";
     }
   }
@@ -68,7 +68,10 @@ public class XMLTableParser {
   private TableGrid parseTable(String docId) {
 
     // Get tableId from docId
-    if (docId == null) { return null; }
+    if (docId == null) { 
+      System.err.println("WARNING: No doc_id in " + fileName + ", table skipped");
+      return null; 
+    }
     int tableNum;
     String tableId = docId + "." + "Table";
     if (seenNames.containsKey(tableId)) {
@@ -143,7 +146,7 @@ public class XMLTableParser {
       assert tableGrid.isCoherent() : "Coherence error: Table " + tableId + " from file '" + fileName + "'";
       return tableGrid;
     } catch (XMLStreamException ex) {
-      System.out.println(ex);
+      System.err.println(ex);
       return null;
     }
   }
@@ -177,7 +180,7 @@ public class XMLTableParser {
         }
       }
     } catch (XMLStreamException ex) {
-      System.out.println(ex);
+      System.err.println(ex);
     }
     if (tableGrid != null) { 
       // Add before and after as cells to tablegrid
@@ -199,10 +202,14 @@ public class XMLTableParser {
         int event = parser.next();
         if (event == XMLStreamConstants.START_ELEMENT) {
           String localName = parser.getLocalName();
+          
+          // Skip refs (because they contain article-ids)
+          if (localName.equals("ref")) {
+            skipSection(localName);
 
-          // Try to get the doc id
-          if (docId == null && isDocIdSection(parser)) {
-            docId = formatDocId(getFlatElementText(localName));
+          // Try to get the doc id, prefering DOI-type
+          } else if (isDocIdSection()) {
+            docId = getDocId(localName, docId);
 
           // if possible look for a table-wrap element (PLoS, PMC?)
           } else if (localName.equals("table-wrap")) { 
@@ -219,7 +226,7 @@ public class XMLTableParser {
         }
       }
     } catch (XMLStreamException ex) {
-      System.out.println(ex);
+      System.err.println(ex);
     }
     return tableGrids;
   }
@@ -227,15 +234,33 @@ public class XMLTableParser {
   /**
    * PLoS / PMC: get the doc ids from the XML
    **/
-  public boolean isDocIdSection(XMLStreamReader parser) {
+  public boolean isDocIdSection() {
     if (!parser.getLocalName().equals("article-id")) { return false; }
     for (int i=0; i < parser.getAttributeCount(); i++) {
-      if (parser.getAttributeValue(i).equals("doi")) { return true; }
+      if (parser.getAttributeValue(i).equals("doi") || parser.getAttributeValue(i).equals("pmid") || parser.getAttributeValue(i).equals("pmc")) { 
+        return true;
+      }
     }
     return false;
   }
 
-  public String formatDocId(String docIdText) { return docIdText.replace("/", "."); }
+  /**
+   * Get the actual doc=id, prefering doi over others
+   **/
+  public String getDocId(String localName, String docId) { 
+    if (docId != null && docId.startsWith("doi:")) { return docId; }
+    String idType = "";
+    for (int i=0; i < parser.getAttributeCount(); i++) {
+      if (parser.getAttributeValue(i).equals("doi")) {
+        idType = "doi";
+      } else if (parser.getAttributeValue(i).equals("pmid")) {
+        idType = "pmid";
+      } else if (parser.getAttributeValue(i).equals("pmc")) {
+        idType = "pmc";
+      }
+    }
+    return idType + ":" + getFlatElementText(localName).replace("/", "."); 
+  }
 
   private void skipSection(String localName) {
     try {
@@ -245,7 +270,7 @@ public class XMLTableParser {
         }
       }
     } catch (XMLStreamException ex) {
-      System.out.println(ex);
+      System.err.println(ex);
     }
   }
 
