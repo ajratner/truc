@@ -120,8 +120,8 @@ ext_genepheno_features_input(
   relation_id, 
   relation_type, 
   table_id, 
-  g_mention_id, gc_id, g_entity, ARRAY_TO_STRING(g_word_idxs, "|^|"),
-  p_mention_id, pc_id, p_entity, ARRAY_TO_STRING(p_word_idxs, "|^|"),
+  gc_id, ARRAY_TO_STRING(g_word_idxs, "|^|"),
+  pc_id, ARRAY_TO_STRING(p_word_idxs, "|^|"),
   cell_ids, cell_words, cell_types, cell_attribs, cell_xpos, cell_xspans, cell_ypos, cell_yspans
 ) :-
   genepheno_relations(relation_id, table_id, g_mention_id, p_mention_id, relation_type, a),
