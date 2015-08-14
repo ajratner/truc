@@ -19,8 +19,8 @@ Mention = collections.namedtuple('Mention', [
             'mention_id',
             'table_id',
             'cell_id',
-            'word_idxs',
             'entity',
+            'word_idxs',
             'type',
             'is_correct'])
 
