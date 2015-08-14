@@ -10,9 +10,7 @@ Starting with a dataset of tables from XML document data (e.g. a directory of PL
         cd ${APP_HOME}/input/parsers/xml/
         ./run.sh ${INPUT_XML_DIR} ${APP_HOME}/input/data/cells.tsv
   
-  2. Compile the DDLog conf file:
-  
-        java -jar ${DEEPDIVE_HOME}/util/ddlog.jar compile app.ddlog > deepdive.conf
+  2. Compile the DDLog conf file: `./comp_ddl`
 
   3. Initialize the database & load data: `cd ${APP_HOME} && deepdive initdb`
   
@@ -29,5 +27,4 @@ Starting with a dataset of tables from XML document data (e.g. a directory of PL
   
   5. Extract G and P mentions, G-P relations: `deepdive run extractions`
   
-  
-  7. View in Beaker Notebook (use `${TRUC_HOME}/beaker/table_viewer.bkr`; see `truc/beaker/README.md`)
+  6. View in Beaker Notebook (use `${TRUC_HOME}/beaker/table_viewer.bkr`; see `truc/beaker/README.md`)
