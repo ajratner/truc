@@ -83,17 +83,17 @@ cells_serialized(
   yspan) * 
   :- cells(table_id, cell_id, words, type, attributes, xpos, xspan, ypos, yspan).
 
-# Serialization of tables- array elements separated by "|~|"
+# Serialization of tables- elements separated by "|^|" unless they are arrays, then separated by "|~|"
 tables_serialized(
   table_id,
-  ARRAY_TO_STRING(ARRAY_AGG(cell_id), "|~|"),
+  ARRAY_TO_STRING(ARRAY_AGG(cell_id), "|^|"),
   ARRAY_TO_STRING(ARRAY_AGG(words), "|~|"),
-  ARRAY_TO_STRING(ARRAY_AGG(type), "|~|"),
-  ARRAY_TO_STRING(ARRAY_AGG(attributes), "|~|"),
-  ARRAY_TO_STRING(ARRAY_AGG(xpos), "|~|"),
-  ARRAY_TO_STRING(ARRAY_AGG(xspan), "|~|"),
-  ARRAY_TO_STRING(ARRAY_AGG(ypos), "|~|"),
-  ARRAY_TO_STRING(ARRAY_AGG(yspan), "|~|")
+  ARRAY_TO_STRING(ARRAY_AGG(type), "|^|"),
+  ARRAY_TO_STRING(ARRAY_AGG(attributes), "|~|", ""),
+  ARRAY_TO_STRING(ARRAY_AGG(xpos), "|^|"),
+  ARRAY_TO_STRING(ARRAY_AGG(xspan), "|^|"),
+  ARRAY_TO_STRING(ARRAY_AGG(ypos), "|^|"),
+  ARRAY_TO_STRING(ARRAY_AGG(yspan), "|^|")
 ) :- cells_serialized(table_id, cell_id, words, type, attributes, xpos, xspan, ypos, yspan).
 
 

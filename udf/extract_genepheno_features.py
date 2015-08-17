@@ -37,7 +37,7 @@ def get_features(row):
 
   # Form a tablelib Table object
   table = tablelib.Table(row.cell_ids, row.cell_words, row.cell_types, row.cell_attributes, \
-            row.cell_xpos, row.cell_xspans, row.cell_yspans)
+            row.cell_xpos, row.cell_xspans, row.cell_ypos, row.cell_yspans)
   
   # Form tablelib CellSapn objects using the table + cell_ids
   gene_cell = tablelib.CellSpan(table.cells[row.gene_cell_id], row.gene_word_idxs)

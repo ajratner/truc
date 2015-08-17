@@ -67,6 +67,7 @@ def bool_parser(b):
 RP_PARSERS = {
   'text' : lambda x : str(x),
   'text[]' : lambda x : tsv_string_to_list(x),
+  'text[][]' : lambda x : tsv_string_to_listoflists(x),
   'int' : lambda x : int(x),
   'int[]' : lambda x : tsv_string_to_list(x, func=int),
   'int[][]' : lambda x : tsv_string_to_listoflists(x, func=int),
@@ -90,7 +91,7 @@ class RowParser:
       if RP_PARSERS.has_key(field_type):
         val = RP_PARSERS[field_type](col.strip())
       else:
-        raise Exception("Unsupported type %s for RowParser class- please add.")
+        raise Exception("Unsupported type %s for RowParser class- please add.\nColumn: %s\nContent is: %s" % (field_type, field_name, col.strip()))
       setattr(row, field_name, val)
     return row
 
