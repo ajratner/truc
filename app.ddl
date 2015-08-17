@@ -11,6 +11,30 @@ cells(
   yspan       int
 ).
 
+cells_serialized(
+  table_id    text,
+  cell_id     int,
+  words       text,
+  type        text,
+  attributes  text,
+  xpos        int,
+  xspan       int,
+  ypos        int,
+  yspan       int
+).
+
+tables_serialized(
+  table_id    text,
+  cell_ids    text,
+  words       text,
+  types       text,
+  attributes  text,
+  xpos        text,
+  xspans      text,
+  ypos        text,
+  yspans      text
+).
+
 gene_mentions(
   mention_id  text,
   table_id    text,
@@ -56,8 +80,8 @@ cells_serialized(
   xpos,
   xspan,
   ypos,
-  yspan
-) :- cells(table_id, cell_id, words, type, attributes, xpos, xspan, ypos, yspan).
+  yspan) * 
+  :- cells(table_id, cell_id, words, type, attributes, xpos, xspan, ypos, yspan).
 
 # Serialization of tables- array elements separated by "|~|"
 tables_serialized(
@@ -80,8 +104,8 @@ function ext_gene_mentions over like ext_mentions_input
   returns like gene_mentions
   implementation "udf/extract_gene_mentions.py" handles tsv lines.
 
-ext_mentions_input(table_id, cell_id, words) :- 
-  cells_serialized(table_id, cell_id, words, a, b, c, d, e, f).
+ext_mentions_input(table_id, cell_id, words) *
+:- cells_serialized(table_id, cell_id, words, a, b, c, d, e, f).
 
 gene_mentions :- !ext_gene_mentions(ext_mentions_input).
 

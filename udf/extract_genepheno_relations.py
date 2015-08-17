@@ -12,8 +12,12 @@ parser = util.RowParser([
           ('table_id', 'text'),
           ('gene_mention_id', 'text'),
           ('gene_cell_id', 'int'),
-          ('gene_word_idxs', 'int[]'),
           ('gene_entity', 'text'),
+          ('gene_word_idxs', 'int[]'),
+          ('pheno_mention_id', 'text'),
+          ('pheno_cell_id', 'int'),
+          ('pheno_entity', 'text'),
+          ('pheno_word_idxs', 'int[]'),
           ('gene_cell_words', 'text[]'),
           ('gene_cell_type', 'text'),
           ('gene_cell_attributes', 'text[]'),
@@ -21,10 +25,6 @@ parser = util.RowParser([
           ('gene_cell_xspan', 'int'),
           ('gene_cell_ypos', 'int'),
           ('gene_cell_yspan', 'int'),
-          ('pheno_mention_id', 'text'),
-          ('pheno_cell_id', 'int'),
-          ('pheno_word_idxs', 'int[]'),
-          ('pheno_entity', 'text'),
           ('pheno_cell_words', 'text[]'),
           ('pheno_cell_type', 'text'),
           ('pheno_cell_attributes', 'text[]'),
@@ -54,6 +54,10 @@ def supervise_relation(row, gp_dict):
         type=None,
         is_correct=None)
 
+  # Only consider SAME ROW
+  if row.gene_cell_ypos != row.pheno_cell_ypos:
+    return None
+
   # Charite supervision- basic
   for gid in row.gene_entity.split('|'):
     for pid in row.pheno_entity.split('|'):
@@ -65,4 +69,6 @@ if __name__ == '__main__':
   GP_DICT = dutil.load_gp_supervision()
   for line in sys.stdin:
     row = parser.parse_tsv_row(line)
-    util.print_tsv_output(supervise_relation(row, GP_DICT))
+    relation = supervise_relation(row, GP_DICT)
+    if relation is not None:
+      util.print_tsv_output(relation)

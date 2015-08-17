@@ -1,5 +1,5 @@
 env_local.sh
-deepdive.conf
+#deepdive.conf
 
 # data
 *.json

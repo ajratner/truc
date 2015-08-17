@@ -115,7 +115,12 @@
                 "* the very data-dense nature of the tables",
                 "* the fact that we are not supplying implicit constraints such as *must occur in same sentence*",
                 "",
-                "**We need the equivalent of *\"must be in the same sentence\"* except more flexible.**  And presumably we need to have some structural parse of the table to do so (and then define something like `MAX_PATH_LEN` on this structure).  But how complex is this structure?"
+                "**We need the equivalent of *\"must be in the same sentence\"* except more flexible.**  ",
+                "* And presumably we need to have some structural parse of the table to do so (and then define something like `MAX_PATH_LEN` on this structure).  But how complex is this structure? (see Q2)",
+                "* Example: the parallel to a *sentence* here would be a path from column header -> row header, including every element on this path",
+                "  * Is this a clustering problem?  A parsing problem?  How to model this?",
+                "",
+                "**The alternative** however is just to let users describe distant supervision rules as they'd like, let them take care of this issue..."
             ],
             "evaluatorReader": false
         },
@@ -138,7 +143,7 @@
                     "        cur.execute(\"SELECT label, COUNT(*) FROM labels_charite_sup_complex GROUP BY label;\")",
                     "        results = cur.fetchall()",
                     "        accuracy = (float(results[1][1])/(results[0][1]+results[1][1])) * 100",
-                    "        print \"\\nAccuracy: %d%%\" % accuracy"
+                    "        print \"\\nPercent that are not SAME_ROW or CELL_TO_HEADER: %d%%\" % accuracy"
                 ],
                 "hidden": true
             },
@@ -149,36 +154,51 @@
                     "outputdata": [
                         {
                             "type": "out",
-                            "value": "\nAccuracy: 53%\n"
+                            "value": "\nPercent that are not SAME_ROW or CELL_TO_HEADER: 30%\n"
                         }
                     ]
                 },
                 "selectedType": "Results",
                 "pluginName": "IPython",
                 "shellId": "E389EBEF43E8411DB525F3C125BC6842",
-                "elapsedTime": 198
+                "elapsedTime": 181
             },
             "evaluatorReader": true,
             "lineCount": 6
         },
         {
-            "id": "sectionNNc15y",
+            "id": "markdownVlHLUb",
+            "type": "markdown",
+            "body": [
+                "Some table patterns observed in the above subset:",
+                "* Row-header: GENE -> cell: VARIANT -> Col-header: PHENO",
+                "* Some standard hierarchy"
+            ],
+            "evaluatorReader": false
+        },
+        {
+            "id": "sectionB6cNKd",
             "type": "section",
-            "title": "TO-DO:",
+            "title": "Q: How well does a baseline system do?",
             "level": 2,
             "evaluatorReader": false,
             "collapsed": false
         },
         {
-            "id": "markdownNhLUln",
-            "type": "markdown",
-            "body": [
-                "* Explore more complex relationships e.g. G-V-P?",
-                "* Think about parsing table structure",
-                "* Think more about distant supervision vs. feature vs. constraint...",
-                "* **Write feature library & do some actual testing!**"
-            ],
-            "evaluatorReader": false
+            "id": "sectioni6RG4M",
+            "type": "section",
+            "title": "Q: What happens when we consider more complex relations e.g. G-V-P?",
+            "level": 2,
+            "evaluatorReader": false,
+            "collapsed": false
+        },
+        {
+            "id": "section1xiNN7",
+            "type": "section",
+            "title": "Q: Adding F as a DS rule vs. a feature...?",
+            "level": 2,
+            "evaluatorReader": false,
+            "collapsed": false
         }
     ]
 }

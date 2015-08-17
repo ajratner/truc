@@ -11,14 +11,40 @@ CREATE TABLE cells (
   yspan INT
 );
 
+DROP TABLE IF EXISTS cells_serialized CASCADE;
+CREATE TABLE cells_serialized (
+  table_id TEXT,
+  cell_id INT,
+  words TEXT,
+  type TEXT,
+  attributes TEXT,
+  xpos INT,
+  xspan INT,
+  ypos INT,
+  yspan INT
+);
+
+DROP TABLE IF EXISTS tables_serialized CASCADE;
+CREATE TABLE tables_serialized (
+  table_id TEXT,
+  cell_ids TEXT,
+  words TEXT,
+  types TEXT,
+  attributes TEXT,
+  xpos TEXT,
+  xspans TEXT,
+  ypos TEXT,
+  yspans TEXT
+);
+
 DROP TABLE IF EXISTS gene_mentions CASCADE;
 CREATE TABLE gene_mentions (
   id BIGINT,
   mention_id TEXT,
   table_id TEXT,
   cell_id INT,
-  word_idxs INT[],
   entity TEXT,
+  word_idxs INT[],
   type TEXT,
   is_correct BOOLEAN
 );
@@ -29,8 +55,8 @@ CREATE TABLE pheno_mentions (
   mention_id TEXT,
   table_id TEXT,
   cell_id INT,
-  word_idxs INT[],
   entity TEXT,
+  word_idxs INT[],
   type TEXT,
   is_correct BOOLEAN
 );
@@ -44,4 +70,11 @@ CREATE TABLE genepheno_relations (
   pheno_mention_id TEXT,
   type TEXT,
   is_correct BOOLEAN
+);
+
+DROP TABLE IF EXISTS genepheno_features CASCADE;
+CREATE TABLE genepheno_features (
+  table_id TEXT,
+  relation_id TEXT,
+  feature TEXT
 );
