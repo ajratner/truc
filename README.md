@@ -11,10 +11,7 @@ Starting with a dataset of tables from XML document data (e.g. a directory of PL
   ./run.sh ${INPUT_XML_DIR} ${APP_HOME}/input/data/cells.tsv
   ```
   
-  2. Compile the DDLog conf file: `./comp_ddl`.  Note: for now, add in parallelism to the tsv extractors with:
-  ```bash
-  cat deepdive.conf | sed -e 's/^\(.*\)\(style: "tsv_extractor"\)/\1\2XXNXX\1parallelism: 8/g' -e $'s/XXNXX/\\\n/g' > deepdive.conf
-  ```
+  2. Compile the DDLog conf file: `./comp_ddl`.
 
   3. Initialize the database & load data: `cd ${APP_HOME} && deepdive initdb`
   
