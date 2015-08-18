@@ -26,7 +26,7 @@ Starting with a dataset of tables from XML document data (e.g. a directory of PL
   );
   ```
 
-##### Running
+##### Running:
   1. Configure `env_local.sh` correctly
 
   2. Compile the DDLog conf file: `./comp_ddl`.
