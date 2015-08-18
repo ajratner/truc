@@ -15,14 +15,14 @@ parser = util.RowParser([
 
 # This defines the output Mention object
 Mention = collections.namedtuple('Mention', [
-            'id',
-            'mention_id',
             'table_id',
+            'mention_id',
             'cell_id',
             'entity',
             'word_idxs',
             'type',
-            'is_correct'])
+            'is_correct',
+            'id'])
 
 ### CANDIDATE EXTRACTION ###
 STOPWORDS = frozenset([w.strip() for w in open('%s/input/dicts/stopwords.tsv' % os.environ['APP_HOME'], 'rb')])
@@ -78,14 +78,14 @@ def extract_candidate_mentions(row, pheno_dict):
       if phrase in pheno_dict:
         mentions.append(
           Mention(
-            id=None,
-            mention_id='%s_%s_%s_%s' % (row.table_id, row.cell_id, word_idxs[0], word_idxs[-1]),
             table_id=row.table_id,
+            mention_id='%s_%s_%s_%s' % (row.table_id, row.cell_id, word_idxs[0], word_idxs[-1]),
             cell_id=row.cell_id,
             word_idxs=word_idxs,
             entity='|'.join(list(pheno_dict[phrase])),
             type='EXACT',
-            is_correct=None))
+            is_correct=None,
+            id=None))
         split_indices.update(word_idxs)
 
   return mentions    

@@ -35,24 +35,24 @@ parser = util.RowParser([
 
 # This defines the output Relation object
 Relation = collections.namedtuple('Relation', [
-            'id',
-            'relation_id',
             'table_id',
+            'relation_id',
             'gene_mention_id',
             'pheno_mention_id',
             'type',
-            'is_correct'])
+            'is_correct',
+            'id'])
 
 ### DISTANT SUPERVISION ###
 def supervise_relation(row, gp_dict):
   r = Relation(
-        id=None,
-        relation_id='%s_%s' % (row.gene_mention_id, row.pheno_mention_id),
         table_id=row.table_id,
+        relation_id='%s_%s' % (row.gene_mention_id, row.pheno_mention_id),
         gene_mention_id=row.gene_mention_id,
         pheno_mention_id=row.pheno_mention_id,
         type=None,
-        is_correct=None)
+        is_correct=None,
+        id=None)
 
   # Only consider SAME ROW
   if row.gene_cell_ypos != row.pheno_cell_ypos:

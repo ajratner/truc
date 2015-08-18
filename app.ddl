@@ -26,9 +26,9 @@ cells_serialized(
 tables_serialized(
   table_id    text,
   cell_ids    text,
-  words       text,
+  words       text[],
   types       text,
-  attributes  text,
+  attributes  text[],
   xpos        text,
   xspans      text,
   ypos        text,
@@ -36,8 +36,8 @@ tables_serialized(
 ).
 
 gene_mentions(
-  mention_id  text,
   table_id    text,
+  mention_id  text,
   cell_id     int,
   entity      text,
   word_idxs   int[],
@@ -46,8 +46,8 @@ gene_mentions(
 ).
 
 pheno_mentions(
-  mention_id  text,
   table_id    text,
+  mention_id  text,
   cell_id     int,
   entity      text,
   word_idxs   int[],
@@ -55,9 +55,9 @@ pheno_mentions(
   is_correct  boolean
 ).
 
-genepheno_relations(
-  relation_id       text,
+genepheno_candidates(
   table_id          text,
+  relation_id       text,
   gene_mention_id   text,
   pheno_mention_id  text,
   type              text,
@@ -71,7 +71,7 @@ genepheno_features(
 ).
 
 # Inference on genepheno relations
-is_genepheno_relation?(relation_id text).
+is_genepheno_relation?(table_id text, relation_id text).
 
 # Serialization of cells- array elements separated by "|^|"
 cells_serialized(
@@ -92,9 +92,11 @@ cells_serialized(
 tables_serialized(
   table_id,
   ARRAY_TO_STRING(ARRAY_AGG(cell_id), "|^|"),
-  ARRAY_TO_STRING(ARRAY_AGG(words), "|~|", ""),
+  #ARRAY_TO_STRING(ARRAY_AGG(words), "|~|", ""),
+  ARRAY_AGG(words),
   ARRAY_TO_STRING(ARRAY_AGG(type), "|^|"),
-  ARRAY_TO_STRING(ARRAY_AGG(attributes), "|~|", ""),
+  #ARRAY_TO_STRING(ARRAY_AGG(attributes), "|~|", ""),
+  ARRAY_AGG(attributes),
   ARRAY_TO_STRING(ARRAY_AGG(xpos), "|^|"),
   ARRAY_TO_STRING(ARRAY_AGG(xspan), "|^|"),
   ARRAY_TO_STRING(ARRAY_AGG(ypos), "|^|"),
@@ -122,23 +124,23 @@ function ext_pheno_mentions over like ext_mentions_input
 pheno_mentions :- !ext_pheno_mentions(ext_mentions_input).
 
 # Gene-Pheno relations :  Candidate extraction / distant supervision
-function ext_genepheno_relations over like ext_genepheno_relations_input
-  returns like genepheno_relations
-  implementation "udf/extract_genepheno_relations.py" handles tsv lines.
+function ext_genepheno_candidates over like ext_genepheno_candidates_input
+  returns like genepheno_candidates
+  implementation "udf/extract_genepheno_candidates.py" handles tsv lines.
 
-ext_genepheno_relations_input(
+ext_genepheno_candidates_input(
   table_id, 
-  g_mention_id, gc_id, g_entity, ARRAY_TO_STRING(g_word_idxs, "|^|"), 
-  p_mention_id, pc_id, p_entity, ARRAY_TO_STRING(p_word_idxs, "|^|"),
+  g_mention_id, gc_id, g_entity, g_is_correct, ARRAY_TO_STRING(g_word_idxs, "|^|"), 
+  p_mention_id, pc_id, p_entity, p_is_correct, ARRAY_TO_STRING(p_word_idxs, "|^|"),
   gc_words, gc_type, gc_attribs, gc_xpos, gc_xspan, gc_ypos, gc_yspan,
   pc_words, pc_type, pc_attribs, pc_xpos, pc_xspan, pc_ypos, pc_yspan
 ) :-
-  gene_mentions(g_mention_id, table_id, gc_id, g_entity, g_word_idxs, a, b),
-  pheno_mentions(p_mention_id, table_id, pc_id, p_entity, p_word_idxs, c, d),
+  gene_mentions(table_id, g_mention_id, gc_id, g_entity, g_word_idxs, a, g_is_correct),
+  pheno_mentions(table_id, p_mention_id, pc_id, p_entity, p_word_idxs, c, p_is_correct),
   cells_serialized(table_id, gc_id, gc_words, gc_type, gc_attribs, gc_xpos, gc_xspan, gc_ypos, gc_yspan),
   cells_serialized(table_id, pc_id, pc_words, pc_type, pc_attribs, pc_xpos, pc_xspan, pc_ypos, pc_yspan).
 
-genepheno_relations :- !ext_genepheno_relations(ext_genepheno_relations_input).
+genepheno_candidates :- !ext_genepheno_candidates(ext_genepheno_candidates_input).
 
 # Gene-Pheno relations : Feature extraction
 function ext_genepheno_features over like ext_genepheno_features_input
@@ -153,19 +155,19 @@ ext_genepheno_features_input(
   pc_id, ARRAY_TO_STRING(p_word_idxs, "|^|"),
   cell_ids, cell_words, cell_types, cell_attribs, cell_xpos, cell_xspans, cell_ypos, cell_yspans
 ) :-
-  genepheno_relations(relation_id, table_id, g_mention_id, p_mention_id, relation_type, a),
-  gene_mentions(g_mention_id, table_id, gc_id, g_entity, g_word_idxs, b, c),
-  pheno_mentions(p_mention_id, table_id, pc_id, p_entity, p_word_idxs, d, e),
+  genepheno_candidates(table_id, relation_id, g_mention_id, p_mention_id, relation_type, a),
+  gene_mentions(table_id, g_mention_id, gc_id, g_entity, g_word_idxs, b, c),
+  pheno_mentions(table_id, p_mention_id, pc_id, p_entity, p_word_idxs, d, e),
   tables_serialized(table_id, cell_ids, cell_words, cell_types, cell_attribs, cell_xpos, cell_xspans, cell_ypos, cell_yspans).
 
 genepheno_features :- !ext_genepheno_features(ext_genepheno_features_input).
 
 # Gene-Pheno inference
-is_genepheno_relation(rid) :- genepheno_relations(rid, a, b, c, d, l)
+is_genepheno_relation(tid, rid) :- genepheno_candidates(tid, rid, b, c, d, l)
 label = l.
 
-is_genepheno_relation(rid) :-
-  genepheno_relations(rid, a, b, c, d, l),
-  genepheno_features(e, rid, f)
+is_genepheno_relation(tid, rid) :-
+  genepheno_candidates(tid, rid, b, c, d, l),
+  genepheno_features(tid, rid, f)
 weight = f
 function = Imply.

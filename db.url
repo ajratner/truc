@@ -1,1 +1,1 @@
-postgresql://localhost/tables
+postgresql://localhost:6432/tables
