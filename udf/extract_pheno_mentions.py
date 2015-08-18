@@ -30,9 +30,10 @@ STOPWORDS = frozenset([w.strip() for w in open('%s/input/dicts/stopwords.tsv' % 
 def keep_word(w):
   return (w.lower() not in STOPWORDS and len(w) > 2)
 
-def extract_candidate_mentions(row, pheno_dict):
+def extract_candidate_mentions(row, pheno_dict, d_in=0):
   """Extracts candidate phenotype mentions from an input row object"""
   mentions = []
+  d = d_in
 
   # First we initialize a list of indices which we 'split' on,
   # i.e. if a window intersects with any of these indices we skip past it
@@ -57,6 +58,17 @@ def extract_candidate_mentions(row, pheno_dict):
     for i in range(len(row.words)-n+1):
       word_idxs = range(i,i+n)
 
+      # Mention template
+      m = Mention(
+            table_id=row.table_id,
+            mention_id='%s_%s_%s_%s' % (row.table_id, row.cell_id, word_idxs[0], word_idxs[-1]),
+            cell_id=row.cell_id,
+            word_idxs=word_idxs,
+            entity=None,
+            type=None,
+            is_correct=None,
+            id=None)
+
       # Strip of any leading/trailing non-alphanumeric characters
       # TODO: Do better tokenization early on so this is unnecessary!
       words = [re.sub(r'^[^a-z0-9]+|[^a-z0-9]+$', '', w.lower()) for w in row.words[i:i+n]]
@@ -77,23 +89,25 @@ def extract_candidate_mentions(row, pheno_dict):
       phrase = ' '.join(words)
       if phrase in pheno_dict:
         mentions.append(
-          Mention(
-            table_id=row.table_id,
-            mention_id='%s_%s_%s_%s' % (row.table_id, row.cell_id, word_idxs[0], word_idxs[-1]),
-            cell_id=row.cell_id,
-            word_idxs=word_idxs,
+          m._replace(
             entity='|'.join(list(pheno_dict[phrase])),
-            type='EXACT',
-            is_correct=None,
-            id=None))
+            type='EXACT_MATCH',
+            is_correct=True))
         split_indices.update(word_idxs)
 
+      # Random negative example
+      # Note that we do not update the split indices here
+      elif random.random() < 0.1 and d > 0:
+        d -= 1
+        mentions.append(m._replace(type='RAND_NEG', is_correct=False))
   return mentions    
 
 if __name__ == '__main__':
   PHENOS = dutil.pheno_phrase_to_hpo_id_map()
+  d = 0
   for line in sys.stdin:
     row = parser.parse_tsv_row(line)
-    mentions = extract_candidate_mentions(row, PHENOS)
+    mentions = extract_candidate_mentions(row, PHENOS, d)
+    d += len(filter(lambda m : m.is_correct, mentions)) - len(filter(lambda m : not m.is_correct, mentions))
     for mention in mentions:
       util.print_tsv_output(mention)

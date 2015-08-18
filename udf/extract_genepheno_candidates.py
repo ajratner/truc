@@ -13,10 +13,12 @@ parser = util.RowParser([
           ('gene_mention_id', 'text'),
           ('gene_cell_id', 'int'),
           ('gene_entity', 'text'),
+          ('gene_is_correct', 'boolean'),
           ('gene_word_idxs', 'int[]'),
           ('pheno_mention_id', 'text'),
           ('pheno_cell_id', 'int'),
           ('pheno_entity', 'text'),
+          ('pheno_is_correct', 'boolean'),
           ('pheno_word_idxs', 'int[]'),
           ('gene_cell_words', 'text[]'),
           ('gene_cell_type', 'text'),
@@ -44,7 +46,7 @@ Relation = collections.namedtuple('Relation', [
             'id'])
 
 ### DISTANT SUPERVISION ###
-def supervise_relation(row, gp_dict):
+def supervise_relation(row, gp_dict, d=0):
   r = Relation(
         table_id=row.table_id,
         relation_id='%s_%s' % (row.gene_mention_id, row.pheno_mention_id),
@@ -58,6 +60,13 @@ def supervise_relation(row, gp_dict):
   if row.gene_cell_ypos != row.pheno_cell_ypos:
     return None
 
+  # Random negative supervision
+  if row.gene_is_correct == False or row.pheno_is_correct == False:
+    if random.random() < 0.1 and d > 0:
+      return r._replace(type='RAND_NEG', is_correct=False)
+    else:
+      return None
+
   # Charite supervision- basic
   for gid in row.gene_entity.split('|'):
     for pid in row.pheno_entity.split('|'):
@@ -67,8 +76,13 @@ def supervise_relation(row, gp_dict):
   
 if __name__ == '__main__':
   GP_DICT = dutil.load_gp_supervision()
+  d = 0
   for line in sys.stdin:
     row = parser.parse_tsv_row(line)
-    relation = supervise_relation(row, GP_DICT)
+    relation = supervise_relation(row, GP_DICT, d)
     if relation is not None:
+      if relation.is_correct:
+        d += 1
+      elif relation.is_correct == False:
+        d -= 1
       util.print_tsv_output(relation)

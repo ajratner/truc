@@ -29,6 +29,17 @@ def extract_candidate_mentions(row, gene_dict, d_in=0):
   mentions = []
   d = d_in
   for i, word in enumerate(row.words):
+
+    # Mention template
+    m = Mention(
+          table_id=row.table_id,
+          mention_id='%s_%s_%s' % (row.table_id, row.cell_id, i),
+          cell_id=row.cell_id,
+          word_idxs=[i],
+          entity=None,
+          type=None,
+          is_correct=None,
+          id=None)
     
     # Strip of any leading/trailing non-alphanumeric characters
     # TODO: Do better tokenization early on so this is unnecessary!
@@ -37,29 +48,15 @@ def extract_candidate_mentions(row, gene_dict, d_in=0):
     # Exact matches
     if len(word) > 3 and word in gene_dict:
       mentions.append(
-        Mention(
-          table_id=row.table_id,
-          mention_id='%s_%s_%s' % (row.table_id, row.cell_id, i),
-          cell_id=row.cell_id,
-          word_idxs=[i],
+        m._replace(
           entity='|'.join(list(gene_dict[word])),
           type="EXACT_MATCH",
-          is_correct=True,
-          id=None))
+          is_correct=True))
 
     # Random negatives
     elif random.random() < 0.1 and d > 0:
       d -= 1
-      mentions.append(
-        Mention(
-          table_id=row.table_id,
-          mention_id='%s_%s_%s' % (row.table_id, row.cell_id, i),
-          cell_id=row.cell_id,
-          word_idxs=[i],
-          entity=None,
-          type="RAND_NEG",
-          is_correct=False,
-          id=None))
+      mentions.append(m._replace(type="RAND_NEG", is_correct=False))
   return mentions
 
 if __name__ == '__main__':
