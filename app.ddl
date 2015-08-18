@@ -70,6 +70,9 @@ genepheno_features(
   feature     text
 ).
 
+# Inference on genepheno relations
+is_genepheno_relation?(relation_id text).
+
 # Serialization of cells- array elements separated by "|^|"
 cells_serialized(
   table_id,
@@ -156,3 +159,13 @@ ext_genepheno_features_input(
   tables_serialized(table_id, cell_ids, cell_words, cell_types, cell_attribs, cell_xpos, cell_xspans, cell_ypos, cell_yspans).
 
 genepheno_features :- !ext_genepheno_features(ext_genepheno_features_input).
+
+# Gene-Pheno inference
+is_genepheno_relation(rid) :- genepheno_relations(rid, a, b, c, d, l)
+label = l.
+
+is_genepheno_relation(rid) :-
+  genepheno_relations(rid, a, b, c, d, l),
+  genepheno_features(e, rid, f)
+weight = f
+function = Imply.
