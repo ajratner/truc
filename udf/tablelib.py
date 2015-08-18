@@ -12,7 +12,6 @@ class Table:
     
     # Store cells in hash table to handle case where cell_id is not a set of incremental ints
     self.cells = {}
-    #
     cells = map(Cell._make, zip(ids, words, types, attribs, xpos, xspans, ypos, yspans))
     for cell in cells:
       self.cells[cell.id] = cell
@@ -23,14 +22,15 @@ class Table:
     self.height = max([cell.ypos + cell.yspan for cell in self.cells.values()]) + 1
 
     # Store grid of refence to cells
-    self.cell_at_array = [[None]*self.width]*self.height
+    self.cell_pointer_grid = {}
     for cell in self.cells.itervalues():
-      for dx in range(cell.xspan + 1):
-        for dy in range(cell.yspan + 1):
-          self.cell_at_array[cell.ypos+dy][cell.xpos+dx] = cell
+      if cell.type == 'CELL':
+        for dx in range(cell.xspan + 1):
+          for dy in range(cell.yspan + 1):
+            self.cell_pointer_grid["%s,%s" % (cell.xpos+dx, cell.ypos+dy)] = cell
 
   def cell_at(self, x, y):
-    return self.cell_at_array[y][x]
+    return self.cell_pointer_grid.get("%s,%s" % (x, y))
 
 STOPWORDS = frozenset([w.strip() for w in open('%s/input/dicts/stopwords.tsv' % os.environ['APP_HOME'], 'rb')])
 
@@ -78,14 +78,16 @@ def get_features(table, cell_span_1, cell_span_2):
   # Add n-gram feature for row headers
   for i, cell_span in enumerate(cell_spans):
     row_header_cell = table.cell_at(0, cell_span.cell.ypos)
-    for ngram in get_ngrams(row_header_cell.words):
-      features.add('ROW_HEADER_CELL_%s[%s]' % (i, ngram))
+    if row_header_cell:
+      for ngram in get_ngrams(row_header_cell.words):
+        features.add('ROW_HEADER_CELL_%s[%s]' % (i, ngram))
 
   # Add n-gram features for column headers
   for i, cell_span in enumerate(cell_spans):
     col_header_cell = table.cell_at(cell_span.cell.xpos, 0)
-    for ngram in get_ngrams(col_header_cell.words):
-      features.add('COL_HEADER_CELL_%s[%s]' % (i, ngram))
+    if col_header_cell:
+      for ngram in get_ngrams(col_header_cell.words):
+        features.add('COL_HEADER_CELL_%s[%s]' % (i, ngram))
 
   # Add n-gram features for cells
   for i, cell_span in enumerate(cell_spans):
