@@ -9,13 +9,24 @@ CellSpan = namedtuple('CellSpan', ['cell', 'word_idxs'])
 
 class Table:
   def __init__(self, ids, words, types, attribs, xpos, xspans, ypos, yspans):
-    self.cells = map(Cell._make, zip(ids, words, types, attribs, xpos, xspans, ypos, yspans))
-    self.width = max(cell.xpos + cell.xspan for cell in self.cells)
-    self.height = max(cell.ypos + cell.yspan for cell in self.cells)
-    self.cell_at_array = [[None]*self.width]*self.height
+    
+    # Store cells in hash table to handle case where cell_id is not a set of incremental ints
+    self.cells = {}
+    #
+    cells = map(Cell._make, zip(ids, words, types, attribs, xpos, xspans, ypos, yspans))
     for cell in cells:
-      for dx in range(cell.xspan):
-        for dy in range(cell.yspan):
+      self.cells[cell.id] = cell
+      self.cells[str(cell.id)] = cell
+
+    # Get some basic properties of the table for reference
+    self.width = max([cell.xpos + cell.xspan for cell in self.cells.values()]) + 1
+    self.height = max([cell.ypos + cell.yspan for cell in self.cells.values()]) + 1
+
+    # Store grid of refence to cells
+    self.cell_at_array = [[None]*self.width]*self.height
+    for cell in self.cells.itervalues():
+      for dx in range(cell.xspan + 1):
+        for dy in range(cell.yspan + 1):
           self.cell_at_array[cell.ypos+dy][cell.xpos+dx] = cell
 
   def cell_at(self, x, y):
@@ -61,7 +72,7 @@ def get_features(table, cell_span_1, cell_span_2):
   Returns a list of feature names as strings for the relation between
   cell_1 and cell_2 in table
   """
-  cell_span = [cell_span_1, cell_span_2]
+  cell_spans = [cell_span_1, cell_span_2]
   features = set()
 
   # Add n-gram feature for row headers

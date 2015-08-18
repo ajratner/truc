@@ -84,10 +84,12 @@ cells_serialized(
   :- cells(table_id, cell_id, words, type, attributes, xpos, xspan, ypos, yspan).
 
 # Serialization of tables- elements separated by "|^|" unless they are arrays, then separated by "|~|"
+# NOTE that it is important to specify the third argument of ARRAY_TO_STRING which specifies a default
+# value for NULL- otherwise it is simply skipped causing array-length errors
 tables_serialized(
   table_id,
   ARRAY_TO_STRING(ARRAY_AGG(cell_id), "|^|"),
-  ARRAY_TO_STRING(ARRAY_AGG(words), "|~|"),
+  ARRAY_TO_STRING(ARRAY_AGG(words), "|~|", ""),
   ARRAY_TO_STRING(ARRAY_AGG(type), "|^|"),
   ARRAY_TO_STRING(ARRAY_AGG(attributes), "|~|", ""),
   ARRAY_TO_STRING(ARRAY_AGG(xpos), "|^|"),
